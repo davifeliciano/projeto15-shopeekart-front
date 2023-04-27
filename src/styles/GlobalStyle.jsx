@@ -1,9 +1,10 @@
-import styled, { createGlobalStyle } from "styled-components";
+import { createGlobalStyle } from "styled-components";
 import useTheme from "../hooks/useTheme";
 
 const GlobalStyle = createGlobalStyle`
 
   body {
+    font-family: 'Roboto', sans-serif;
     background: linear-gradient(to bottom, ${(props) =>
       props.colors.backgroundUp}, ${(props) => props.colors.backgroundDown});
 

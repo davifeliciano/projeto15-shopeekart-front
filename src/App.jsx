@@ -1,10 +1,10 @@
-import { Routes, Route } from 'react-router-dom';
-import Header from './components/Header';
+import { Routes, Route } from "react-router-dom";
+import Root from "./routes/Root";
 
 export default function App() {
   return (
-/*     <Routes>
-    </Routes> */
-    <Header />
+    <Routes>
+      <Route path="/" element={<Root />} />
+    </Routes>
   );
 }
