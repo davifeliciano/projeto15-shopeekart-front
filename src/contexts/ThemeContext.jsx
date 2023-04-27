@@ -25,7 +25,6 @@ export const ThemeProvider = ({ children }) => {
       secondary: "",
       logo: "",
     },
-
   ];
 
   const themeObject = {

@@ -5,10 +5,9 @@ const GlobalStyle = createGlobalStyle`
 
   body {
     font-family: 'Roboto', sans-serif;
-    background: linear-gradient(to bottom, ${(props) =>
-      props.colors.backgroundUp}, ${(props) => props.colors.backgroundDown});
-
-  }
+    background: ${(props) => props.colors.backgroundAside};
+    color: #000000cc
+  } 
 `;
 
 const GlobalStyleWrapper = () => {
