@@ -2,10 +2,10 @@ import styled, { createGlobalStyle, css } from "styled-components";
 import useTheme from "../hooks/useTheme";
 
 const GlobalStyle = createGlobalStyle`
-
   body {
     background: linear-gradient(to bottom, ${(props) =>
       props.colors.backgroundUp}, ${(props) => props.colors.backgroundDown});
+    color: ${props => props.colors.mainText};
 
   }
   main {
@@ -32,9 +32,10 @@ const FormContainer = styled.div`
   h1 {
     font-size: 2rem;
     margin-bottom: 20px;
+    margin-top: 10px;
     text-align: center;
     letter-spacing: 1px;
-    color: #333333;
+    color: ${props => props.colors.h1};
   }
 
   form {
@@ -56,17 +57,17 @@ const FormContainer = styled.div`
       margin: 8px;
       position: relative;
 
+      :focus {
+        background-color: ${(props) => props.colors.secondary};
+        border-color: ${(props) => props.colors.primary};
+        outline: none;
+      }
+
       ::placeholder {
         font-size: 18px;
         position: absolute;
         top: 50%;
         transform: translateY(-50%);
-      }
-
-      :focus {
-        background-color: ${(props) => props.colors.secondary};
-        border-color: ${(props) => props.colors.primary};
-        outline: none;
       }
     }
 
@@ -77,7 +78,11 @@ const FormContainer = styled.div`
       border-radius: 15px;
       border: 0;
       box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.2);
-      background-color: ${(props) => props.colors.primary + "B1"};
+      background-image: radial-gradient(
+        circle at center,
+        ${(props) => props.colors.backgroundUpHeader + "B1"} 0,
+        ${(props) => props.colors.backgroundDownHeader + "B1"} 100%
+      );
       font-size: 18px;
       color: white;
       cursor: pointer;
@@ -85,8 +90,30 @@ const FormContainer = styled.div`
 
     button:hover,
     button:focus {
-      background-color: ${(props) => props.colors.primary};
+      background-image: radial-gradient(
+        circle at center,
+        ${(props) => props.colors.backgroundUpHeader} 0,
+        ${(props) => props.colors.backgroundDownHeader} 100%
+      );
     }
+  }
+
+  p {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+  a {
+    color: ${props => props.colors.mainText};
+    text-decoration: none;
+    text-align: center;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+  strong {
+    font-weight: 700;
+    color: ${props => props.colors.primary}
   }
 `;
 
@@ -98,15 +125,19 @@ const Err = styled.p`
           left: -9999px;
         `
       : css`
-          background-color: lightpink;
+          background-color: ${props => props.colors.primary + "55"};
           color: firebrick;
           font-weight: bold;
-          padding: 0.5rem;
+          font-size: 22px;
           position: fixed;
-          width: 314px;
-          top: calc(50% - 144px);
-          text-align: center;
-          z-index: -1;
+          width: 450px;
+          height: 36px;
+          top: 225px;
+          left:calc(50% - 225px);
+          border-radius: 15px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
         `}
 `;
 
@@ -115,14 +146,13 @@ const GlobalStyleWrapper = () => {
   return <GlobalStyle colors={colors} />;
 };
 
-export const FormContainerWrapper = () => {
+export const FormContainerWrapper = ({ children }) => {
   const { colors } = useTheme();
-  console.log(colors);
-  return <FormContainer colors={colors} />;
+  return <FormContainer colors={colors}>{children}</FormContainer>;
 };
-export const ErrWrapper = () => {
+export const ErrWrapper = ({ children, status }) => {
   const { colors } = useTheme();
-  return <Err colors={colors} />;
+  return <Err colors={colors} status={status} aria-live="assertive">{children}</Err>;
 };
 
 export default GlobalStyleWrapper;

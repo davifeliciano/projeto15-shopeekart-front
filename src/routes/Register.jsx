@@ -1,48 +1,95 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import styled from "styled-components";
-import useTheme from "../hooks/useTheme";
 import { FormContainerWrapper, ErrWrapper } from "../styles/GlobalStyle";
+import { axiosPrivate } from "../api/axios";
 
 const Register = () => {
-  const { colors } = useTheme();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [errMsg, setErrMsg] = useState('');
+  const [errMsg, setErrMsg] = useState("");
   const nameRef = useRef();
   const errRef = useRef();
-  const nav = useNavigate();
-
+  const navigate = useNavigate();
   useEffect(() => {
     nameRef.current.focus();
-  }, [])
+  }, []);
 
   useEffect(() => {
-    setErrMsg('');
-  }, [name, email, password, confirmPassword])
+    setErrMsg("");
+  }, [name, email, password, confirmPassword]);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    const body = { name, email, pwd: password };
+
+    try {
+      await axiosPrivate.post("/register", body);
+
+      navigate("/login", { replace: true });
+    } catch (err) {
+      console.log(err);
+      if (!err?.response) {
+        setErrMsg("No Server Response");
+      } else if (err.response?.status === 400) {
+        setErrMsg("Missing Username or Password");
+      } else if (err.response?.status === 401) {
+        setErrMsg("Unauthorized");
+      } else {
+        setErrMsg("Register Failed");
+      }
+      errRef.current.focus();
+    }
+  };
+
   return (
     <main>
       <FormContainerWrapper>
         <h1>Cadastrar</h1>
-        <ErrWrapper ref={errRef} status={errMsg ? "errmsg" : "offscreen"} aria-live="assertive">{errMsg} </ErrWrapper>
-        <form>
-          <input type="text" placeholder="Nome completo" ref={nameRef} />
-          <input type="text" placeholder="E-mail" />
-          <input type="password" placeholder="Senha" />
-          <input type="password" placeholder="Confirmar senha" />
+        <ErrWrapper
+          status={errMsg ? "errmsg" : "offscreen"}
+        >
+          <span ref={errRef}>{errMsg}</span>
+        </ErrWrapper>
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            placeholder="Nome completo"
+            ref={nameRef}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          <input
+            type="text"
+            placeholder="E-mail"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <input
+            type="password"
+            placeholder="Senha"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <input
+            type="password"
+            placeholder="Confirmar senha"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+          />
           <button>Cadastrar</button>
         </form>
         <p>Ao se inscrever, você concorda com as políticas da Shopeekart.</p>
-        <Link>
-          Tem uma Conta? <strong>Entre</strong>
-        </Link>
+        <p>
+          <Link>
+            Tem uma Conta? <strong>Entre</strong>
+          </Link>
+        </p>
       </FormContainerWrapper>
     </main>
   );
 };
-
-
 
 export default Register;
