@@ -12,8 +12,9 @@ export const ThemeProvider = ({ children }) => {
       backgroundDownHeader: "#FF6533",
       background: "#FFFFFF",
       backgroundAside: "#F5F5F5",
-      primary: "#f7a5f3",
-      secondary: "#fbeffb",
+      primary: "#F53D2D",
+      secondary: "#f53d2d0c",
+      mainText: "#000000",
       logo: "#FFFFFF",
     },
     {
@@ -23,6 +24,7 @@ export const ThemeProvider = ({ children }) => {
       backgroundAside: "",
       primary: "",
       secondary: "",
+      mainText: "",
       logo: "",
     },
 
@@ -36,6 +38,7 @@ export const ThemeProvider = ({ children }) => {
       backgroundAside: configColors[theme].backgroundAside,
       primary: configColors[theme].primary,
       secondary: configColors[theme].secondary,
+      mainText: configColors[theme].mainText,
       logo: configColors[theme].logo,
       // add more theme properties as needed
     },
