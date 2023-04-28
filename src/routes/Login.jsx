@@ -4,6 +4,7 @@ import MainContainerWrapper from "../components/SignRoutesContainer";
 import FormContainerWrapper from "../components/FormContainer";
 import ErrWrapper from "../components/Err";
 import { axiosPrivate } from "../api/axios";
+import useAuth from "../hooks/useAuth";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -11,9 +12,10 @@ const Login = () => {
   const [errMsg, setErrMsg] = useState("");
   const emailRef = useRef();
   const errRef = useRef();
+  const { setAuth } = useAuth();
   const navigate = useNavigate();
-  const location =  useLocation();
-  const from = (location.pathname !== "/login") ? location.pathname : "/";
+  const location = useLocation();
+  const from = location.pathname !== "/login" ? location.pathname : "/";
   useEffect(() => {
     emailRef.current.focus();
   }, []);
@@ -24,13 +26,13 @@ const Login = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!emailRegex.test(email)) {
       setErrMsg("Invalid email");
       return;
     }
-    if (password.length < 6){
+    if (password.length < 6) {
       setErrMsg("Password must have at least 6 characters");
       return;
     }
@@ -38,7 +40,11 @@ const Login = () => {
     const body = { email, pwd: password };
 
     try {
-      await axiosPrivate.post("/login", body);
+      const response = await axiosPrivate.post("/login", body);
+      setAuth({
+        name: response.data.name,
+        accessToken: response.data.accessToken,
+      });
 
       navigate(from, { replace: true });
     } catch (err) {
@@ -60,9 +66,7 @@ const Login = () => {
     <MainContainerWrapper>
       <FormContainerWrapper>
         <h1>Login</h1>
-        <ErrWrapper
-          status={errMsg ? "errmsg" : "offscreen"}
-        >
+        <ErrWrapper status={errMsg ? "errmsg" : "offscreen"}>
           <span ref={errRef}>{errMsg}</span>
         </ErrWrapper>
         <form onSubmit={handleSubmit}>
@@ -83,7 +87,7 @@ const Login = () => {
         </form>
         <p>
           <Link to="/signup">
-          New to Shopeekart? <strong>Sign Up</strong>
+            New to Shopeekart? <strong>Sign Up</strong>
           </Link>
         </p>
       </FormContainerWrapper>
