@@ -104,7 +104,7 @@ const SignUp = () => {
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
           />
-          <button>Cadastrar</button>
+          <button>Sign Up</button>
         </form>
         <p>By signing up, you agree to Shopeekart's policies.</p>
         <p>
