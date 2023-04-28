@@ -6,7 +6,6 @@ const ProductCard = ({ product }) => {
   const { colors } = useTheme();
   const discountPrice = formatCurrency(product.discountedPrice.$numberDecimal);
   const retailPrice = formatCurrency(product.retailPrice.$numberDecimal);
-  console.log(product);
 
   return (
     <Container colors={colors}>
@@ -17,9 +16,9 @@ const ProductCard = ({ product }) => {
         <PricesContainer>
           <div>
             <Price colors={colors} className="discount">
-              {discountPrice}
+              {retailPrice}
             </Price>{" "}
-            <Price colors={colors}>{retailPrice}</Price>
+            <Price colors={colors}>{discountPrice}</Price>
           </div>
         </PricesContainer>
       </ProductDetail>
