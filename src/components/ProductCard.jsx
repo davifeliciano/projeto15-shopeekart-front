@@ -4,14 +4,15 @@ import formatCurrency from "../utils/formatCurrency";
 
 const ProductCard = ({ product }) => {
   const { colors } = useTheme();
-  const discountPrice = formatCurrency(product.discounted_price.$numberDecimal);
-  const retailPrice = formatCurrency(product.retail_price.$numberDecimal);
+  const discountPrice = formatCurrency(product.discountedPrice.$numberDecimal);
+  const retailPrice = formatCurrency(product.retailPrice.$numberDecimal);
+  console.log(product);
 
   return (
     <Container colors={colors}>
-      <img src={product.image?.at(0)} alt={product.product_name} />
+      <img src={product.image?.at(0)} alt={product.productName} />
       <ProductDetail>
-        <h2>{product.product_name}</h2>
+        <h2>{product.productName}</h2>
         <Brand>{product.brand}</Brand>
         <PricesContainer>
           <div>
