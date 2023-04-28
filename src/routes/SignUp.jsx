@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { FormContainerWrapper, ErrWrapper } from "../styles/GlobalStyle";
 import { axiosPrivate } from "../api/axios";
 
-const Register = () => {
+const SignUp = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -22,6 +22,29 @@ const Register = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+    if (!name) {
+      setErrMsg("Full name is missing");
+      return;
+    }
+    if (!emailRegex.test(email)) {
+      setErrMsg("Invalid email");
+      setEmail("");
+      return;
+    }
+    if (password !== confirmPassword ) {
+      setErrMsg("Passwords dont match");
+      setPassword("");
+      setConfirmPassword("");
+      return;
+    }
+    if (password.length < 6){
+      setErrMsg("Passwords must have at least 6 characters");
+      setPassword("");
+      setConfirmPassword("");
+      return;
+    }
 
     const body = { name, email, pwd: password };
 
@@ -34,9 +57,11 @@ const Register = () => {
       if (!err?.response) {
         setErrMsg("No Server Response");
       } else if (err.response?.status === 400) {
-        setErrMsg("Missing Username or Password");
+        setErrMsg("Missing Name, email or Password");
       } else if (err.response?.status === 401) {
         setErrMsg("Unauthorized");
+      } else if (err.response?.status === 409) {
+        setErrMsg("E-mail already in use")
       } else {
         setErrMsg("Register Failed");
       }
@@ -47,7 +72,7 @@ const Register = () => {
   return (
     <main>
       <FormContainerWrapper>
-        <h1>Cadastrar</h1>
+        <h1>Sign Up</h1>
         <ErrWrapper
           status={errMsg ? "errmsg" : "offscreen"}
         >
@@ -56,7 +81,7 @@ const Register = () => {
         <form onSubmit={handleSubmit}>
           <input
             type="text"
-            placeholder="Nome completo"
+            placeholder="Full name"
             ref={nameRef}
             value={name}
             onChange={(e) => setName(e.target.value)}
@@ -69,22 +94,22 @@ const Register = () => {
           />
           <input
             type="password"
-            placeholder="Senha"
+            placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
           <input
             type="password"
-            placeholder="Confirmar senha"
+            placeholder="Confirm password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
           />
           <button>Cadastrar</button>
         </form>
-        <p>Ao se inscrever, você concorda com as políticas da Shopeekart.</p>
+        <p>By signing up, you agree to Shopeekart's policies.</p>
         <p>
           <Link>
-            Tem uma Conta? <strong>Entre</strong>
+            Already Registered? <strong>Login</strong>
           </Link>
         </p>
       </FormContainerWrapper>
@@ -92,4 +117,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default SignUp;

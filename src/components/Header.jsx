@@ -10,7 +10,7 @@ const Header = () => {
   return (
     <HeaderContainer colors={colors}>
       <HeaderNav>
-        <Link to="/register">Register</Link>
+        <Link to="/signup">Sign Up</Link>
         <HeaderNavSeparator />
         <Link to="/login">Login</Link>
       </HeaderNav>
