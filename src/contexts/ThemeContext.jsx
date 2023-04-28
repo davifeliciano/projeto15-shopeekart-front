@@ -17,6 +17,7 @@ export const ThemeProvider = ({ children }) => {
       mainText: "#000000cc",
       h1: "#333",
       logo: "#FFFFFF",
+      borderInputs: "#ccc",
     },
     {
       backgroundUpHeader: "",
@@ -28,6 +29,7 @@ export const ThemeProvider = ({ children }) => {
       mainText: "",
       h1: "",
       logo: "",
+      borderInputs: "",
     },
   ];
 
@@ -42,6 +44,7 @@ export const ThemeProvider = ({ children }) => {
       mainText: configColors[theme].mainText,
       h1: configColors[theme].h1,
       logo: configColors[theme].logo,
+      borderInputs: configColors[theme].borderInputs,
       // add more theme properties as needed
     },
     theme,

@@ -30,7 +30,7 @@ const FormContainer = styled.div`
       border-radius: 15px;
       width: 100%;
       height: 36px;
-      border: 2px solid #ccc;
+      border: 2px solid ${(props) => props.colors.borderInputs};
       box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
       font-size: 18px;
       text-indent: 10px;

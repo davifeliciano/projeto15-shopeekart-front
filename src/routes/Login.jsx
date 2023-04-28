@@ -5,11 +5,17 @@ import FormContainerWrapper from "../components/FormContainer";
 import ErrWrapper from "../components/Err";
 import { axiosPrivate } from "../api/axios";
 import useAuth from "../hooks/useAuth";
+import useInput from "../hooks/useInput";
+import useToggle from "../hooks/useToggle";
+import styled from "styled-components";
+import useTheme from "../hooks/useTheme";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
+  const [email, resetEmail, emailAttribs] = useInput("email", "");
+  const [check, toggleCheck] = useToggle("persist", false);
   const [password, setPassword] = useState("");
   const [errMsg, setErrMsg] = useState("");
+  const { colors } = useTheme();
   const emailRef = useRef();
   const errRef = useRef();
   const { setAuth } = useAuth();
@@ -17,6 +23,10 @@ const Login = () => {
   const location = useLocation();
   const from = location.pathname !== "/login" ? location.pathname : "/";
   useEffect(() => {
+    if (!check) {
+        resetEmail();
+        localStorage.removeItem("email");
+    }
     emailRef.current.focus();
   }, []);
 
@@ -46,6 +56,8 @@ const Login = () => {
         accessToken: response.data.accessToken,
       });
 
+      if (!check) resetEmail();
+
       navigate(from, { replace: true });
     } catch (err) {
       console.log(err);
@@ -74,8 +86,7 @@ const Login = () => {
             type="text"
             placeholder="E-mail"
             ref={emailRef}
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            {...emailAttribs}
           />
           <input
             type="password"
@@ -83,6 +94,16 @@ const Login = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
+          <CheckboxContainer>
+            <StyledCheckbox
+              type="checkbox"
+              id="persist"
+              onChange={toggleCheck}
+              checked={check}
+              colors={colors}
+            />
+            <CheckboxLabel htmlFor="persist">Trust this device</CheckboxLabel>
+          </CheckboxContainer>
           <button>Login</button>
         </form>
         <p>
@@ -94,5 +115,48 @@ const Login = () => {
     </MainContainerWrapper>
   );
 };
+const StyledCheckbox = styled.input`
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid ${(props) => props.colors.borderInputs};
+  border-radius: 4px;
+  background-color: ${(props) =>
+    props.checked ? props.colors.primary : "white"};
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  outline: none;
+  position: relative;
+  cursor: pointer;
 
+  &::after {
+    content: "${(props) => (props.checked ? "o" : "")}";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 16px;
+    font-weight: bold;
+    color: ${(props) => (props.checked ? "white" : "transparent")};
+  }
+  &:not(:checked):focus {
+    background-color: ${(props) => props.colors.secondary};
+    border-color: ${(props) => props.colors.primary};
+  }
+  &:checked:focus {
+    border-color: ${(props) => props.colors.primary};
+  }
+`;
+const CheckboxContainer = styled.span`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+`;
+
+const CheckboxLabel = styled.label`
+  margin-left: 8px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+`;
 export default Login;
