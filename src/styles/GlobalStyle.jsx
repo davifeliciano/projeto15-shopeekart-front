@@ -4,9 +4,8 @@ import useTheme from "../hooks/useTheme";
 const GlobalStyle = createGlobalStyle`
   body {
     font-family: 'Roboto', sans-serif;
-    background: linear-gradient(to bottom, ${(props) =>
-      props.colors.backgroundUp}, ${(props) => props.colors.backgroundDown});
-    color: ${props => props.colors.mainText};
+    background-color: ${(props) => props.colors.backgroundAside};
+    color: ${(props) => props.colors.mainText};
 
   }
   main {
@@ -36,7 +35,7 @@ const FormContainer = styled.div`
     margin-top: 10px;
     text-align: center;
     letter-spacing: 1px;
-    color: ${props => props.colors.h1};
+    color: ${(props) => props.colors.h1};
   }
 
   form {
@@ -104,7 +103,7 @@ const FormContainer = styled.div`
     margin-bottom: 32px;
   }
   a {
-    color: ${props => props.colors.mainText};
+    color: ${(props) => props.colors.mainText};
     text-decoration: none;
     text-align: center;
 
@@ -114,7 +113,7 @@ const FormContainer = styled.div`
   }
   strong {
     font-weight: 700;
-    color: ${props => props.colors.primary}
+    color: ${(props) => props.colors.primary};
   }
 `;
 
@@ -126,7 +125,7 @@ const Err = styled.p`
           left: -9999px;
         `
       : css`
-          background-color: ${props => props.colors.primary + "55"};
+          background-color: ${(props) => props.colors.primary + "55"};
           color: firebrick;
           font-weight: bold;
           font-size: 22px;
@@ -134,7 +133,7 @@ const Err = styled.p`
           width: 450px;
           height: 36px;
           top: 225px;
-          left:calc(50% - 225px);
+          left: calc(50% - 225px);
           border-radius: 15px;
           display: flex;
           align-items: center;
@@ -153,7 +152,11 @@ export const FormContainerWrapper = ({ children }) => {
 };
 export const ErrWrapper = ({ children, status }) => {
   const { colors } = useTheme();
-  return <Err colors={colors} status={status} aria-live="assertive">{children}</Err>;
+  return (
+    <Err colors={colors} status={status} aria-live="assertive">
+      {children}
+    </Err>
+  );
 };
 
 export default GlobalStyleWrapper;

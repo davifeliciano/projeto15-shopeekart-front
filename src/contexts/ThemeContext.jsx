@@ -14,7 +14,7 @@ export const ThemeProvider = ({ children }) => {
       backgroundAside: "#F5F5F5",
       primary: "#F53D2D",
       secondary: "#f53d2d0c",
-      mainText: "#000000",
+      mainText: "#000000cc",
       h1: "#333",
       logo: "#FFFFFF",
     },
@@ -29,7 +29,6 @@ export const ThemeProvider = ({ children }) => {
       h1: "",
       logo: "",
     },
-
   ];
 
   const themeObject = {
