@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { FormContainerWrapper, ErrWrapper } from "../styles/GlobalStyle";
+import MainContainerWrapper from "../components/SignRoutesContainer";
+import FormContainerWrapper from "../components/FormContainer";
+import ErrWrapper from "../components/Err";
 import { axiosPrivate } from "../api/axios";
 
 const Login = () => {
@@ -55,7 +57,7 @@ const Login = () => {
   };
 
   return (
-    <main>
+    <MainContainerWrapper>
       <FormContainerWrapper>
         <h1>Login</h1>
         <ErrWrapper
@@ -85,7 +87,7 @@ const Login = () => {
           </Link>
         </p>
       </FormContainerWrapper>
-    </main>
+    </MainContainerWrapper>
   );
 };
 

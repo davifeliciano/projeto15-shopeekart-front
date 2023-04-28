@@ -1,9 +1,9 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import FormContainerWrapper from "../components/FormContainer";
+import MainContainerWrapper from "../components/SignRoutesContainer";
 import ErrWrapper from "../components/Err";
 import { axiosPrivate } from "../api/axios";
-import styled from "styled-components";
 import useTheme from "../hooks/useTheme";
 
 const SignUp = () => {
@@ -70,7 +70,7 @@ const SignUp = () => {
   };
 
   return (
-    <Container colors={colors}>
+    <MainContainerWrapper colors={colors}>
       <FormContainerWrapper>
         <h1>Sign Up</h1>
         <ErrWrapper status={errMsg ? "errmsg" : "offscreen"}>
@@ -111,21 +111,8 @@ const SignUp = () => {
           </Link>
         </p>
       </FormContainerWrapper>
-    </Container>
+    </MainContainerWrapper>
   );
 };
-
-const Container = styled.main`
-  background-image: radial-gradient(
-    circle at center,
-    ${(props) => props.colors.backgroundDownHeader} 0,
-    ${(props) => props.colors.backgroundUpHeader} 100%
-  );
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
 
 export default SignUp;
