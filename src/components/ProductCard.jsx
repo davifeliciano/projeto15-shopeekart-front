@@ -12,7 +12,7 @@ const ProductCard = ({ product }) => {
       <img src={product.image?.at(0)} alt={product.productName} />
       <ProductDetail>
         <h2>{product.productName}</h2>
-        <Brand>{product.brand}</Brand>
+        {product.brand && <Brand>{product.brand}</Brand>}
         <PricesContainer>
           <div>
             <Price colors={colors} className="discount">
@@ -54,8 +54,7 @@ const ProductDetail = styled.div`
   overflow: hidden;
 
   & h2 {
-    max-height: 48px;
-    overflow: hidden;
+    flex: 1;
   }
 `;
 
