@@ -35,19 +35,14 @@ const SignUp = () => {
     }
     if (!emailRegex.test(email)) {
       setErrMsg("Invalid email");
-      setEmail("");
       return;
     }
     if (password !== confirmPassword) {
       setErrMsg("Passwords dont match");
-      setPassword("");
-      setConfirmPassword("");
       return;
     }
     if (password.length < 6) {
       setErrMsg("Passwords must have at least 6 characters");
-      setPassword("");
-      setConfirmPassword("");
       return;
     }
 
@@ -68,7 +63,7 @@ const SignUp = () => {
       } else if (err.response?.status === 409) {
         setErrMsg("E-mail already in use");
       } else {
-        setErrMsg("Register Failed");
+        setErrMsg("Sign up Failed");
       }
       errRef.current.focus();
     }
@@ -111,7 +106,7 @@ const SignUp = () => {
         </form>
         <p>By signing up, you agree to Shopeekart's policies.</p>
         <p>
-          <Link>
+          <Link to="/login">
             Already Registered? <strong>Login</strong>
           </Link>
         </p>
