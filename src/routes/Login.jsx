@@ -1,64 +1,54 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { FormContainerWrapper, ErrWrapper } from "../styles/GlobalStyle";
 import { axiosPrivate } from "../api/axios";
 
-const SignUp = () => {
-  const [name, setName] = useState("");
+const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [errMsg, setErrMsg] = useState("");
-  const nameRef = useRef();
+  const emailRef = useRef();
   const errRef = useRef();
   const navigate = useNavigate();
+  const location =  useLocation();
+  const from = (location.pathname !== "/login") ? location.pathname : "/";
   useEffect(() => {
-    nameRef.current.focus();
+    emailRef.current.focus();
   }, []);
 
   useEffect(() => {
     setErrMsg("");
-  }, [name, email, password, confirmPassword]);
+  }, [email, password]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
-    if (!name) {
-      setErrMsg("Full name is missing");
-      return;
-    }
     if (!emailRegex.test(email)) {
       setErrMsg("Invalid email");
       return;
     }
-    if (password !== confirmPassword ) {
-      setErrMsg("Passwords dont match");
-      return;
-    }
     if (password.length < 6){
-      setErrMsg("Passwords must have at least 6 characters");
+      setErrMsg("Password must have at least 6 characters");
       return;
     }
 
-    const body = { name, email, pwd: password };
+    const body = { email, pwd: password };
 
     try {
-      await axiosPrivate.post("/register", body);
+      await axiosPrivate.post(from, body);
 
-      navigate("/login", { replace: true });
+      navigate("/", { replace: true });
     } catch (err) {
       console.log(err);
       if (!err?.response) {
         setErrMsg("No Server Response");
       } else if (err.response?.status === 400) {
-        setErrMsg("Missing Name, email or Password");
+        setErrMsg("Missing E-mail or Password");
       } else if (err.response?.status === 401) {
         setErrMsg("Unauthorized");
-      } else if (err.response?.status === 409) {
-        setErrMsg("E-mail already in use")
       } else {
-        setErrMsg("Sign up Failed");
+        setErrMsg("Login Failed");
       }
       errRef.current.focus();
     }
@@ -67,7 +57,7 @@ const SignUp = () => {
   return (
     <main>
       <FormContainerWrapper>
-        <h1>Sign Up</h1>
+        <h1>Login</h1>
         <ErrWrapper
           status={errMsg ? "errmsg" : "offscreen"}
         >
@@ -76,14 +66,8 @@ const SignUp = () => {
         <form onSubmit={handleSubmit}>
           <input
             type="text"
-            placeholder="Full name"
-            ref={nameRef}
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-          <input
-            type="text"
             placeholder="E-mail"
+            ref={emailRef}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
@@ -93,18 +77,11 @@ const SignUp = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <input
-            type="password"
-            placeholder="Confirm password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-          />
-          <button>Sign Up</button>
+          <button>Login</button>
         </form>
-        <p>By signing up, you agree to Shopeekart's policies.</p>
         <p>
-          <Link to="/login">
-            Already Registered? <strong>Login</strong>
+          <Link to="/signup">
+          New to Shopeekart? <strong>Sign Up</strong>
           </Link>
         </p>
       </FormContainerWrapper>
@@ -112,4 +89,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default Login;
