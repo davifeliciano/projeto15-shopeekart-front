@@ -1,7 +1,10 @@
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { FormContainerWrapper, ErrWrapper } from "../styles/GlobalStyle";
+import FormContainerWrapper from "../components/FormContainer";
+import ErrWrapper from "../components/Err";
 import { axiosPrivate } from "../api/axios";
+import styled from "styled-components";
+import useTheme from "../hooks/useTheme";
 
 const SignUp = () => {
   const [name, setName] = useState("");
@@ -12,6 +15,8 @@ const SignUp = () => {
   const nameRef = useRef();
   const errRef = useRef();
   const navigate = useNavigate();
+  const { colors } = useTheme();
+
   useEffect(() => {
     nameRef.current.focus();
   }, []);
@@ -22,7 +27,7 @@ const SignUp = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!name) {
       setErrMsg("Full name is missing");
@@ -33,13 +38,13 @@ const SignUp = () => {
       setEmail("");
       return;
     }
-    if (password !== confirmPassword ) {
+    if (password !== confirmPassword) {
       setErrMsg("Passwords dont match");
       setPassword("");
       setConfirmPassword("");
       return;
     }
-    if (password.length < 6){
+    if (password.length < 6) {
       setErrMsg("Passwords must have at least 6 characters");
       setPassword("");
       setConfirmPassword("");
@@ -61,7 +66,7 @@ const SignUp = () => {
       } else if (err.response?.status === 401) {
         setErrMsg("Unauthorized");
       } else if (err.response?.status === 409) {
-        setErrMsg("E-mail already in use")
+        setErrMsg("E-mail already in use");
       } else {
         setErrMsg("Register Failed");
       }
@@ -70,12 +75,10 @@ const SignUp = () => {
   };
 
   return (
-    <main>
+    <Container colors={colors}>
       <FormContainerWrapper>
         <h1>Sign Up</h1>
-        <ErrWrapper
-          status={errMsg ? "errmsg" : "offscreen"}
-        >
+        <ErrWrapper status={errMsg ? "errmsg" : "offscreen"}>
           <span ref={errRef}>{errMsg}</span>
         </ErrWrapper>
         <form onSubmit={handleSubmit}>
@@ -113,8 +116,21 @@ const SignUp = () => {
           </Link>
         </p>
       </FormContainerWrapper>
-    </main>
+    </Container>
   );
 };
+
+const Container = styled.main`
+  background-image: radial-gradient(
+    circle at center,
+    ${(props) => props.colors.backgroundDownHeader} 0,
+    ${(props) => props.colors.backgroundUpHeader} 100%
+  );
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
 
 export default SignUp;
