@@ -38,9 +38,9 @@ const Login = () => {
     const body = { email, pwd: password };
 
     try {
-      await axiosPrivate.post(from, body);
+      await axiosPrivate.post("/login", body);
 
-      navigate("/", { replace: true });
+      navigate(from, { replace: true });
     } catch (err) {
       console.log(err);
       if (!err?.response) {
