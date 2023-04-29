@@ -6,6 +6,7 @@ import Login from "./routes/Login";
 import PersistLogin from "./components/PersistLogin";
 import RedirectIfAuth from "./components/RedirectIfAuth";
 import Product from "./routes/Product";
+import Cart from "./routes/Cart";
 
 axios.defaults.baseURL = import.meta.env.VITE_APP_API_URL;
 
@@ -15,6 +16,7 @@ export default function App() {
       <Route element={<PersistLogin />}>
         <Route path="/" element={<Root />} />
         <Route path="/product/:id" element={<Product />} />
+        <Route path="/cart" element={<Cart />} />
         <Route element={<RedirectIfAuth />}>
           <Route path="/signup" element={<SignUp />} />
           <Route path="/login" element={<Login />} />
