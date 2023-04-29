@@ -165,7 +165,20 @@ const UserMenu = styled.div`
   width: 200px;
   height: 200px;
   background-color: blue;
+  padding: 10px 0;
+  border: 1px solid #ccc;
   z-index: 1;
+
+  &::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 10px;
+  border-style: solid;
+  border-color: transparent transparent #ccc transparent;
+}
   
   div {
     margin: 10px;
