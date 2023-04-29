@@ -1,16 +1,17 @@
 import styled from "styled-components";
 import logo from "../assets/logowhite.svg";
+import { Link } from "react-router-dom";
 
 const HeaderLogo = () => {
   return (
-    <LogoContainer>
+    <LogoContainerLink to="/">
       <img src={logo} width="512" height="593" alt="Shopeekart Logo" />
       <h1>Shopkart</h1>
-    </LogoContainer>
+    </LogoContainerLink>
   );
 };
 
-const LogoContainer = styled.div`
+const LogoContainerLink = styled(Link)`
   display: flex;
   align-items: center;
   gap: 3px;
