@@ -4,18 +4,32 @@ import useTheme from "../hooks/useTheme";
 import { Link } from "react-router-dom";
 import HeaderLogo from "./HeaderLogo";
 import useAuth from "../hooks/useAuth";
+import { useState } from "react";
 
 const Header = () => {
   const { colors } = useTheme();
   const { auth } = useAuth();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const handleMouseEnter = () => {
+    setIsMenuOpen(true);
+  };
+  const handleMouseLeave = () => {
+    setIsMenuOpen(false);
+  };
   return (
     <HeaderContainer colors={colors}>
       <HeaderNav>
         {auth?.accessToken ? (
-          <>
+          <span onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
             <Img src={auth.avatar} alt="Avatar" />
-            {auth.name.split(' ')[0]}
-          </>
+            {auth.name.split(" ")[0]}
+            {isMenuOpen && <UserMenu>
+              <div>Linha 1</div>
+              <div>Linha 2</div>
+              <div>Linha 3</div>
+            </UserMenu> }
+          </span>
         ) : (
           <>
             <Link to="/signup">Sign Up</Link>
@@ -65,6 +79,14 @@ const HeaderNav = styled.nav`
   justify-content: flex-end;
   align-items: center;
   gap: 10px;
+
+  span {
+    display: flex;
+    align-items: center;
+    * {
+      margin-right: 6px;
+    }
+  }
 `;
 
 const HeaderNavSeparator = styled.div`
@@ -134,6 +156,26 @@ const CartLink = styled(Link)`
 
 const Img = styled.img`
   width: 25px;
+`;
+
+const UserMenu = styled.div`
+  position: fixed;
+  top: 30px;
+  right: 10px;
+  width: 200px;
+  height: 200px;
+  background-color: blue;
+  z-index: 1;
+  
+  div {
+    margin: 10px;
+    height: 30px;
+    text-align: center;
+
+    :hover {
+      background-color: lightblue;
+    }
+  }
 `
 
 export default Header;
