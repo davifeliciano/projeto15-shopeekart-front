@@ -53,6 +53,7 @@ const Login = () => {
       const response = await axiosPrivate.post("/login", body);
       setAuth({
         name: response.data.name,
+        avatar: response.data.avatar,
         accessToken: response.data.accessToken,
       });
 

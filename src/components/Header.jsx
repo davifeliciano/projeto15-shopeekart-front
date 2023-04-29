@@ -3,16 +3,26 @@ import { BsSearch, BsCart2 } from "react-icons/bs";
 import useTheme from "../hooks/useTheme";
 import { Link } from "react-router-dom";
 import HeaderLogo from "./HeaderLogo";
+import useAuth from "../hooks/useAuth";
 
 const Header = () => {
   const { colors } = useTheme();
-
+  const { auth } = useAuth();
   return (
     <HeaderContainer colors={colors}>
       <HeaderNav>
-        <Link to="/signup">Sign Up</Link>
-        <HeaderNavSeparator />
-        <Link to="/login">Login</Link>
+        {auth?.accessToken ? (
+          <>
+            <Img src={auth.avatar} alt="Avatar" />
+            {auth.name.split(' ')[0]}
+          </>
+        ) : (
+          <>
+            <Link to="/signup">Sign Up</Link>
+            <HeaderNavSeparator />
+            <Link to="/login">Login</Link>
+          </>
+        )}
       </HeaderNav>
       <HeaderMain>
         <HeaderLogo />
@@ -53,6 +63,7 @@ const HeaderContainer = styled.header`
 const HeaderNav = styled.nav`
   display: flex;
   justify-content: flex-end;
+  align-items: center;
   gap: 10px;
 `;
 
@@ -120,5 +131,9 @@ const CartLink = styled(Link)`
     color: white;
   }
 `;
+
+const Img = styled.img`
+  width: 25px;
+`
 
 export default Header;
