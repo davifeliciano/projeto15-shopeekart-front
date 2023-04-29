@@ -36,6 +36,7 @@ const HeaderContainer = styled.header`
   gap: 1rem;
   padding: 5px 50px;
   height: 100px;
+  min-width: 1032px;
 
   color: white;
   background: linear-gradient(

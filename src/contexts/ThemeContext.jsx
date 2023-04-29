@@ -17,6 +17,7 @@ export const ThemeProvider = ({ children }) => {
       mainText: "#000000cc",
       h1: "#333",
       logo: "#FFFFFF",
+      addToCartBg: "#FFF5F1",
     },
     {
       backgroundUpHeader: "",
