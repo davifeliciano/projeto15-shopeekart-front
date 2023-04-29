@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import useTheme from "../hooks/useTheme";
 import formatCurrency from "../utils/formatCurrency";
+import { Link } from "react-router-dom";
 
 const ProductCard = ({ product }) => {
   const { colors } = useTheme();
@@ -8,7 +9,7 @@ const ProductCard = ({ product }) => {
   const retailPrice = formatCurrency(product.retailPrice.$numberDecimal);
 
   return (
-    <Container colors={colors}>
+    <ContainerLink colors={colors} to={`/product/${product._id}`}>
       <img src={product.image?.at(0)} alt={product.productName} />
       <ProductDetail>
         <h2>{product.productName}</h2>
@@ -22,11 +23,11 @@ const ProductCard = ({ product }) => {
           </div>
         </PricesContainer>
       </ProductDetail>
-    </Container>
+    </ContainerLink>
   );
 };
 
-const Container = styled.div`
+const ContainerLink = styled(Link)`
   display: flex;
   flex-direction: column;
   background-color: white;

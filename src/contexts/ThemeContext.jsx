@@ -18,6 +18,7 @@ export const ThemeProvider = ({ children }) => {
       h1: "#333",
       logo: "#FFFFFF",
       borderInputs: "#ccc",
+      addToCartBg: "#FFF5F1",
     },
     {
       backgroundUpHeader: "",

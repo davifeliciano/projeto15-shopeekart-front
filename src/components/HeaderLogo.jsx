@@ -28,12 +28,6 @@ const LogoContainer = styled.div`
     font-family: "Comfortaa", cursive;
     font-size: 30px;
   }
-
-  @media (max-width: 738px) {
-    & h1 {
-      display: none;
-    }
-  }
 `;
 
 export default HeaderLogo;
