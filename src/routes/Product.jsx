@@ -2,18 +2,21 @@ import axios from "axios";
 import styled from "styled-components";
 import { BsCartPlus } from "react-icons/bs";
 import Header from "../components/Header";
-import { useEffect, useState, useRef } from "react";
-import { useParams } from "react-router-dom";
+import { useEffect, useState, useRef, useContext } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { Carousel } from "react-responsive-carousel";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import useTheme from "../hooks/useTheme";
 import formatCurrency from "../utils/formatCurrency";
 import Counter from "../components/Counter";
+import { CartContext } from "../contexts/CartContext";
 
 const Product = () => {
+  const navigate = useNavigate();
   const { id } = useParams();
   const [product, setProduct] = useState({});
   const [orderCount, setOrderCount] = useState(1);
+  const { cart, setCart } = useContext(CartContext);
   const { colors } = useTheme();
   const discountPercent = useRef("0");
   const formattedRetailPrice =
@@ -39,6 +42,20 @@ const Product = () => {
       })
       .catch(console.error);
   }, [id]);
+
+  function addProductToCart() {
+    const cartCopy = [...cart];
+    const item = cartCopy.find((item) => item.product._id === id);
+
+    if (item) {
+      item.count += orderCount;
+      setCart(cartCopy);
+    } else {
+      setCart([...cart, { count: orderCount, product }]);
+    }
+
+    return navigate("/cart", { replace: true });
+  }
 
   return (
     <>
@@ -76,8 +93,10 @@ const Product = () => {
             </PricesContainer>
             <AddToCartContainer>
               Quantity
-              <Counter count={orderCount} setCount={setOrderCount} />
-              <AddToCartButton colors={colors}>
+              <CounterContainer>
+                <Counter count={orderCount} setCount={setOrderCount} />
+              </CounterContainer>
+              <AddToCartButton colors={colors} onClick={addProductToCart}>
                 <BsCartPlus />
                 Add Product To Cart
               </AddToCartButton>
@@ -141,7 +160,7 @@ const PricesContainer = styled.div`
   align-items: center;
   gap: 1em;
   padding: 15px 20px;
-  background-color: #f5f5f5;
+  background-color: ${(props) => props.colors.backgroundAside};
   border-radius: 3px;
 
   & span.retail {
@@ -171,6 +190,10 @@ const AddToCartContainer = styled.div`
   align-items: center;
 `;
 
+const CounterContainer = styled.div`
+  height: 32px;
+`;
+
 const AddToCartButton = styled.button`
   display: flex;
   justify-content: center;
@@ -178,7 +201,7 @@ const AddToCartButton = styled.button`
   gap: 1em;
   width: 280px;
   height: 48px;
-  background-color: #fff5f1;
+  background-color: ${(props) => props.colors.addToCartBg};
   border: 1px solid ${(props) => props.colors.primary};
   border-radius: 3px;
   color: ${(props) => props.colors.primary};
@@ -186,7 +209,7 @@ const AddToCartButton = styled.button`
 
   &:hover {
     cursor: pointer;
-    background-color: #ffeae2;
+    background-color: ${(props) => props.colors.addToCartHoverBg};
   }
 
   & svg {

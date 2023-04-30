@@ -18,7 +18,6 @@ export const ThemeProvider = ({ children }) => {
       h1: "#333",
       logo: "#FFFFFF",
       borderInputs: "#ccc",
-      addToCartBg: "#FFF5F1",
     },
     {
       backgroundUpHeader: "",
@@ -46,7 +45,8 @@ export const ThemeProvider = ({ children }) => {
       h1: configColors[theme].h1,
       logo: configColors[theme].logo,
       borderInputs: configColors[theme].borderInputs,
-      // add more theme properties as needed
+      addToCartBg: "#FFF5F1",
+      addToCartHoverBg: "#ffeae2",
     },
     theme,
     setTheme,

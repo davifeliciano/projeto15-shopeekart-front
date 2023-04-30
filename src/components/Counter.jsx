@@ -28,7 +28,7 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   width: 100px;
-  height: 32px;
+  height: 100%;
   border: 1px solid ${(props) => props.colors.backgroundAside};
   border-radius: 3px;
 `;
