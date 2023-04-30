@@ -5,31 +5,18 @@ import { Link } from "react-router-dom";
 import HeaderLogo from "./HeaderLogo";
 import useAuth from "../hooks/useAuth";
 import { useState } from "react";
+import UserMenu from "./UserMenu";
 
 const Header = () => {
   const { colors } = useTheme();
   const { auth } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const handleMouseEnter = () => {
-    setIsMenuOpen(true);
-  };
-  const handleMouseLeave = () => {
-    setIsMenuOpen(false);
-  };
   return (
     <HeaderContainer colors={colors}>
       <HeaderNav>
         {auth?.accessToken ? (
-          <span onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-            <Img src={auth.avatar} alt="Avatar" />
-            {auth.name.split(" ")[0]}
-            {isMenuOpen && <UserMenu>
-              <div>Linha 1</div>
-              <div>Linha 2</div>
-              <div>Linha 3</div>
-            </UserMenu> }
-          </span>
+          <UserMenu isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen}/>
         ) : (
           <>
             <Link to="/signup">Sign Up</Link>
@@ -46,9 +33,9 @@ const Header = () => {
             <BsSearch />
           </SearchButton>
         </SearchForm>
-        <CartLink to="/cart">
+        {!isMenuOpen && <CartLink to="/cart">
           <BsCart2 />
-        </CartLink>
+        </CartLink>}
       </HeaderMain>
     </HeaderContainer>
   );
@@ -80,14 +67,7 @@ const HeaderNav = styled.nav`
   justify-content: flex-end;
   align-items: center;
   gap: 10px;
-
-  span {
-    display: flex;
-    align-items: center;
-    * {
-      margin-right: 6px;
-    }
-  }
+  height: 12px;
 `;
 
 const HeaderNavSeparator = styled.div`
@@ -154,42 +134,5 @@ const CartLink = styled(Link)`
     color: white;
   }
 `;
-
-const Img = styled.img`
-  width: 25px;
-`;
-
-const UserMenu = styled.div`
-  position: fixed;
-  top: 30px;
-  right: 10px;
-  width: 200px;
-  height: 200px;
-  background-color: blue;
-  padding: 10px 0;
-  border: 1px solid #ccc;
-  z-index: 1;
-
-  &::before {
-  content: '';
-  position: absolute;
-  top: -10px;
-  left: 50%;
-  transform: translateX(-50%);
-  border-width: 10px;
-  border-style: solid;
-  border-color: transparent transparent #ccc transparent;
-}
-  
-  div {
-    margin: 10px;
-    height: 30px;
-    text-align: center;
-
-    :hover {
-      background-color: lightblue;
-    }
-  }
-`
 
 export default Header;
