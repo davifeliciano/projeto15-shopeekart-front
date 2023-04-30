@@ -80,11 +80,10 @@ const UserMenuContainer = styled.div`
   height: 134px;
   background-color: ${(props) => props.colors.background};
   padding: 10px 0;
-  z-index: 1;
+  z-index: 10;
   border-radius: 20px;
   border: 2px solid ${(props) => props.colors.primary};
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
-  z-index: 100;
 
   &::before {
     content: "";

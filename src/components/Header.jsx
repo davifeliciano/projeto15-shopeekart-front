@@ -25,7 +25,7 @@ const Header = () => {
           </>
         )}
       </HeaderNav>
-      <HeaderMain>
+      <HeaderMain isMenuOpen={isMenuOpen}>
         <HeaderLogo />
         <SearchForm>
           <input type="text" placeholder="Search in Shopkart" />
@@ -82,6 +82,7 @@ const HeaderMain = styled.div`
   align-items: center;
   height: 40px;
   position: relative;
+  width: ${props => props.isMenuOpen ? "calc(100% - 200px)" : "100%"}
 `;
 
 const SearchForm = styled.form`
@@ -94,9 +95,9 @@ const SearchForm = styled.form`
   border-radius: 3px;
   filter: drop-shadow(0px 4px 2px rgba(0, 0, 0, 0.15));
 
-  position: absolute;
+  position: fixed;
   left: 50%;
-  top: 0;
+  top: 35px;
   transform: translateX(-50%);
 
   & input {
