@@ -14,6 +14,12 @@ const Header = () => {
 
   return (
     <HeaderContainer colors={colors}>
+              <SearchForm>
+          <input type="text" placeholder="Search in Shopkart" />
+          <SearchButton colors={colors}>
+            <BsSearch />
+          </SearchButton>
+        </SearchForm>
       <HeaderNav>
         {auth?.accessToken ? (
           <UserMenu isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen}/>
@@ -27,12 +33,7 @@ const Header = () => {
       </HeaderNav>
       <HeaderMain isMenuOpen={isMenuOpen}>
         <HeaderLogo />
-        <SearchForm>
-          <input type="text" placeholder="Search in Shopkart" />
-          <SearchButton colors={colors}>
-            <BsSearch />
-          </SearchButton>
-        </SearchForm>
+
         {!isMenuOpen && <CartLink to="/cart">
           <BsCart2 />
         </CartLink>}
@@ -95,7 +96,7 @@ const SearchForm = styled.form`
   border-radius: 3px;
   filter: drop-shadow(0px 4px 2px rgba(0, 0, 0, 0.15));
 
-  position: fixed;
+  position: absolute;
   left: 50%;
   top: 35px;
   transform: translateX(-50%);

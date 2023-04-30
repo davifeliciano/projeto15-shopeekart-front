@@ -71,7 +71,7 @@ const UserMenu = (props) => {
 };
 
 const UserMenuContainer = styled.div`
-  position: fixed;
+  position: absolute;
   top: 32px;
   right: 10px;
   width: 200px;
@@ -115,7 +115,7 @@ const Span = styled.span`
   align-items: center;
   justify-content: center;
   height: 30px;
-  position: fixed;
+  position: absolute;
   top: 2px;
   right: 15px;
   width: 200px;
