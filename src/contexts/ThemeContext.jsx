@@ -18,6 +18,8 @@ export const ThemeProvider = ({ children }) => {
       h1: "#333",
       logo: "#FFFFFF",
       borderInputs: "#ccc",
+      addToCartBg: "#FFF5F1",
+      addToCartHoverBg: "#ffeae2",
     },
     {
       backgroundUpHeader: "",
@@ -30,24 +32,13 @@ export const ThemeProvider = ({ children }) => {
       h1: "",
       logo: "",
       borderInputs: "",
+      addToCartBg: "",
+      addToCartHoverBg: "",
     },
   ];
 
   const themeObject = {
-    colors: {
-      backgroundUpHeader: configColors[theme].backgroundUpHeader,
-      backgroundDownHeader: configColors[theme].backgroundDownHeader,
-      background: configColors[theme].background,
-      backgroundAside: configColors[theme].backgroundAside,
-      primary: configColors[theme].primary,
-      secondary: configColors[theme].secondary,
-      mainText: configColors[theme].mainText,
-      h1: configColors[theme].h1,
-      logo: configColors[theme].logo,
-      borderInputs: configColors[theme].borderInputs,
-      addToCartBg: "#FFF5F1",
-      addToCartHoverBg: "#ffeae2",
-    },
+    colors: configColors[theme],
     theme,
     setTheme,
   };
