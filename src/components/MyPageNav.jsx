@@ -5,6 +5,7 @@ import male from "../assets/maleMenu";
 import female from "../assets/femaleMenu";
 import useAuth from "../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
+import purchase from "../assets/purchase";
 
 const MyPageNav = () => {
   const [sex, setSex] = useState("male");
@@ -48,7 +49,7 @@ const MyPageNav = () => {
         </div>
       </MyAccountContainer>
       <MyPurchaseContainer colors={colors}>
-        <img src={sex === "male" ? male : female} alt="Menu" />
+        <img src={purchase} alt="Menu" />
         <strong onClick={() => navigate("/user/purchase")}>My Purchase</strong>
       </MyPurchaseContainer>
     </Nav>
