@@ -2,12 +2,16 @@ import styled from "styled-components";
 import useTheme from "../hooks/useTheme";
 
 const FormContainer = styled.div`
-  width: 500px;
-  height: 500px;
+  width: ${props => props?.width ? props.width : "500px" };
+  height: ${props => props?.flexGrow ? "auto" : props?.height ? props.height : "500px" };
   background-color: white;
   border-radius: 20px;
   border: none;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  flex-grow: ${props => props?.flexGrow ? 1 : 0};
 
   h1 {
     font-size: 2rem;
@@ -23,7 +27,7 @@ const FormContainer = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 30px;
+    padding: 30px 30px 0px 30px;
 
     input[type="text"],
     input[type="password"] {
@@ -97,9 +101,9 @@ const FormContainer = styled.div`
   }
 `;
 
-export const FormContainerWrapper = ({ children }) => {
+export const FormContainerWrapper = ({ children, height, width, flexGrow }) => {
   const { colors } = useTheme();
-  return <FormContainer colors={colors}>{children}</FormContainer>;
+  return <FormContainer colors={colors} height={height} width={width} flexGrow={flexGrow}> {children} </FormContainer>;
 };
 
 export default FormContainerWrapper;
