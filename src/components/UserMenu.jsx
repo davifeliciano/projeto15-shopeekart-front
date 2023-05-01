@@ -61,8 +61,8 @@ const UserMenu = (props) => {
             ref={containerRef}
             colors={colors}
           >
-            <div onClick={() => navigate("/myaccount")}>My Account</div>
-            <div onClick={() => navigate("/mypurchase")}>My Purchase</div>
+            <div onClick={() => navigate("/user/account/profile")}>My Account</div>
+            <div onClick={() => navigate("/user/purchase")}>My Purchase</div>
             <div onClick={handleLogout}>Logout</div>
           </UserMenuContainer>
       )}

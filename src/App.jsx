@@ -8,8 +8,10 @@ import RedirectIfAuth from "./components/RedirectIfAuth";
 import Product from "./routes/Product";
 import Cart from "./routes/Cart";
 import MyPages from "./components/MyPages";
-import MyAccount from "./routes/MyAccount";
 import MyPurchase from "./routes/MyPurchase";
+import MyAddresses from "./routes/MyAddresses";
+import MyPassword from "./routes/MyPassword";
+import MyProfile from "./routes/MyProfile";
 
 axios.defaults.baseURL = import.meta.env.VITE_APP_API_URL;
 
@@ -21,8 +23,10 @@ export default function App() {
         <Route path="/product/:id" element={<Product />} />
         <Route path="/cart" element={<Cart />} />
         <Route element={<MyPages />}>
-          <Route path="/myaccount" element={<MyAccount />} />
-          <Route path="/mypurchase" element={<MyPurchase />} />
+          <Route path="/user/account/profile" element={<MyProfile />} />
+          <Route path="/user/account/addresses" element={<MyAddresses />} />
+          <Route path="/user/account/password" element={<MyPassword />} />
+          <Route path="/user/purchase" element={<MyPurchase />} />
         </Route>
         <Route element={<RedirectIfAuth />}>
           <Route path="/signup" element={<SignUp />} />

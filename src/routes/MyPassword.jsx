@@ -1,11 +1,11 @@
 import React from 'react';
 
-const MyAccount = () => {
+const MyPassword = () => {
     return (
         <div>
-            My Account
+            My password
         </div>
     );
 };
 
-export default MyAccount;
+export default MyPassword;
