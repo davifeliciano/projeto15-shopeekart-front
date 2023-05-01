@@ -4,6 +4,7 @@ import useTheme from "../hooks/useTheme";
 import FormContainerWrapper from "../components/FormContainer";
 import password from "../assets/password";
 import ErrWrapper from "../components/Err";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
 
 const MyPassword = () => {
   const { colors } = useTheme();
@@ -12,14 +13,21 @@ const MyPassword = () => {
   const [confirmNewPwd, setConfirmNewPwd] = useState("");
   const [errMsg, setErrMsg] = useState("");
   const errRef = useRef();
+  const axiosPrivate = useAxiosPrivate();
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async event => {
     event.preventDefault();
-    console.log(pwd, newPwd, confirmNewPwd)
 
     if (pwd.length < 6) return setErrMsg("Password must have at least 6 characters")
     if (newPwd.length < 6) return setErrMsg("Password must have at least 6 characters")
     if (newPwd !== confirmNewPwd) return setErrMsg("New passwords dont match")
+
+    try {
+        await axiosPrivate.post("/password/change", {pwd, newpwd: newPwd})
+    }
+    catch (err) {
+        
+    }
   };
 
   useEffect(() => {
@@ -98,6 +106,7 @@ const Container = styled.div`
   justify-content: center;
   flex-direction: column;
   height: 100%;
+  max-height: 570px;
 `;
 const LockerDiv = styled.div`
   flex-grow: 1;
