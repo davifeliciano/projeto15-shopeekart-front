@@ -12,6 +12,7 @@ import MyPurchase from "./routes/MyPurchase";
 import MyAddresses from "./routes/MyAddresses";
 import MyPassword from "./routes/MyPassword";
 import MyProfile from "./routes/MyProfile";
+import RequireAuth from "./components/RequireAuth";
 
 axios.defaults.baseURL = import.meta.env.VITE_APP_API_URL;
 
@@ -22,11 +23,14 @@ export default function App() {
         <Route path="/" element={<Root />} />
         <Route path="/product/:id" element={<Product />} />
         <Route path="/cart" element={<Cart />} />
+        <Route element={<RequireAuth />}>
         <Route element={<MyPages />}>
           <Route path="/user/account/profile" element={<MyProfile />} />
           <Route path="/user/account/addresses" element={<MyAddresses />} />
           <Route path="/user/account/password" element={<MyPassword />} />
           <Route path="/user/purchase" element={<MyPurchase />} />
+        </Route>
+        {/* Rotas Protegidas Aqui.... */}
         </Route>
         <Route element={<RedirectIfAuth />}>
           <Route path="/signup" element={<SignUp />} />
