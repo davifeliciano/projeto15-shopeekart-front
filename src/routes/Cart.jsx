@@ -31,6 +31,34 @@ const Cart = () => {
   const { auth } = useAuth();
   const axiosPrivate = useAxiosPrivate();
 
+  const setInputInitialValues = (shipmentInfo) => {
+    shipmentInfo?.firstName && setFirstName(shipmentInfo.firstName)
+    shipmentInfo?.lastName && setLastName(shipmentInfo.lastName)
+    shipmentInfo?.cpf && setCpf(shipmentInfo.cpf)
+    shipmentInfo?.phone && setPhone(shipmentInfo.phone)
+    shipmentInfo?.address && setAddress(shipmentInfo.address)
+    shipmentInfo?.city && setCity(shipmentInfo.city)
+    shipmentInfo?.uf && setUf(shipmentInfo.uf)
+    shipmentInfo?.country && setCountry(shipmentInfo.country)
+    shipmentInfo?.postalCode && setPostalCode(shipmentInfo.postalCode)
+  }
+
+  useEffect(() => {
+    const getLastOrder = async () => {
+      try {
+        const response = await axiosPrivate("/orders/last");
+        console.log(response.data.shipmentInfo);
+        if (response.status === 204) return null;
+        setInputInitialValues(response.data.shipmentInfo);
+        return response;
+      } catch (err) {
+        console.log(err);
+        return null;
+      }
+    };
+    auth?.accessToken && getLastOrder();
+  }, []);
+
   const handleInputChange = (value, setFunction) => {
     !clearErrMsg && setClearErrMsg(true);
     setFunction(value);
