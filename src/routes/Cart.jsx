@@ -31,9 +31,9 @@ const Cart = () => {
   const { auth } = useAuth();
   const axiosPrivate = useAxiosPrivate();
 
-  const handleInputChange = (e, setFunction) => {
+  const handleInputChange = (value, setFunction) => {
     !clearErrMsg && setClearErrMsg(true);
-    setFunction(e.target.value);
+    setFunction(value);
   };
 
   const handleSubmit = async (event) => {
@@ -104,7 +104,7 @@ const Cart = () => {
                   placeholder="First Name"
                   value={firstName}
                   onChange={(e) =>
-                    handleInputChange(e.target.value, setFirstName)
+                    handleInputChange(e.currentTarget.value, setFirstName)
                   }
                 />
                 <RightInput
