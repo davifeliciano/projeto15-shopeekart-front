@@ -68,7 +68,6 @@ const Cart = () => {
       },
     };
 
-    console.log(auth);
     if (!auth) {
       return navigate("/login", { state: { order } });
     }

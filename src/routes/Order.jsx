@@ -17,14 +17,9 @@ const Order = () => {
   useEffect(() => {
     privateAxios
       .get(`/order/${id}`)
-      .then((res) => {
-        console.log(res);
-        setOrder(res.data);
-      })
+      .then((res) => setOrder(res.data))
       .catch(console.error);
   }, []);
-
-  console.log(order);
 
   return (
     <>
