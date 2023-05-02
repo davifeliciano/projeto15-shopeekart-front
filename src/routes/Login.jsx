@@ -58,6 +58,7 @@ const Login = () => {
         name: response.data.name,
         avatar: response.data.avatar,
         accessToken: response.data.accessToken,
+        email: response.data.email,
       });
 
       if (!check) resetEmail();
