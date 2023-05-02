@@ -13,6 +13,7 @@ import MyAddresses from "./routes/MyAddresses";
 import MyPassword from "./routes/MyPassword";
 import MyProfile from "./routes/MyProfile";
 import RequireAuth from "./components/RequireAuth";
+import Reset from "./routes/Reset";
 
 axios.defaults.baseURL = import.meta.env.VITE_APP_API_URL;
 
@@ -35,6 +36,7 @@ export default function App() {
         <Route element={<RedirectIfAuth />}>
           <Route path="/signup" element={<SignUp />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/reset" element={<Reset />} />
         </Route>
       </Route>
     </Routes>

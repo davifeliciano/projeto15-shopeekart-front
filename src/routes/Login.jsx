@@ -108,6 +108,11 @@ const Login = () => {
           <button>Login</button>
         </form>
         <p>
+          <Link to="/reset">
+            Forgot your password? <strong>Reset</strong>
+          </Link>
+        </p>
+        <p>
           <Link to="/signup">
             New to Shopeekart? <strong>Sign Up</strong>
           </Link>
