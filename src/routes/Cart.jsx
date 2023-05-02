@@ -6,11 +6,14 @@ import CartItem from "../components/CartItem";
 import sumCart from "../utils/sumCart";
 import formatCurrency from "../utils/formatCurrency";
 import useTheme from "../hooks/useTheme";
-import { Link } from "react-router-dom";
+import useAuth from "../hooks/useAuth";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
+import { Link, useNavigate } from "react-router-dom";
 import FormContainerWrapper from "../components/FormContainer";
 import ErrWrapper from "../components/Err";
 
 const Cart = () => {
+  const navigate = useNavigate();
   const { cart, setCart } = useContext(CartContext);
   const { colors } = useTheme();
   const [firstName, setFirstName] = useState("");
@@ -25,13 +28,15 @@ const Cart = () => {
   const [errMsg, setErrMsg] = useState("");
   const [clearErrMsg, setClearErrMsg] = useState(true);
   const errRef = useRef();
+  const { auth } = useAuth();
+  const axiosPrivate = useAxiosPrivate();
 
   const handleInputChange = (value, setFunction) => {
     !clearErrMsg && setClearErrMsg(true);
     setFunction(value);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     setClearErrMsg(false);
 
@@ -45,11 +50,38 @@ const Cart = () => {
     if (!country) return setErrMsg("Missing Country");
     if (!postalCode) return setErrMsg("Missing Postal Code");
 
+    const order = {
+      products: cart.map((item) => {
+        return { count: item.count, product: item.product._id };
+      }),
+      orderTotal: sumCart(cart),
+      shipmentInfo: {
+        firstName,
+        lastName,
+        cpf,
+        phone,
+        address,
+        city,
+        uf,
+        country,
+        postalCode,
+      },
+    };
+
+    if (!auth) {
+      return navigate("/login", { state: { order } });
+    }
+
     try {
+      const res = await axiosPrivate.post("/orders", order);
+      const orderId = res.data._id;
+      setCart([]);
+      return navigate(`/order/${orderId}`, { replace: true });
     } catch (err) {
-    } finally {
+      console.error(err);
     }
   };
+
   useEffect(() => {
     if (clearErrMsg) setErrMsg("");
   }, [firstName, lastName, cpf, phone, address, city, uf, country, postalCode]);
@@ -70,13 +102,17 @@ const Cart = () => {
                   type="text"
                   placeholder="First Name"
                   value={firstName}
-                  onChange={(e) => handleInputChange(e.target.value, setFirstName)}
+                  onChange={(e) =>
+                    handleInputChange(e.currentTarget.value, setFirstName)
+                  }
                 />
                 <RightInput
                   type="text"
                   placeholder="Last Name"
                   value={lastName}
-                  onChange={(e) => handleInputChange(e.target.value, setLastName)}
+                  onChange={(e) =>
+                    handleInputChange(e.target.value, setLastName)
+                  }
                 />
               </HorizontalContainer>
               <input
@@ -115,14 +151,18 @@ const Cart = () => {
                   type="text"
                   placeholder="Country"
                   value={country}
-                  onChange={(e) => handleInputChange(e.target.value, setCountry)}
+                  onChange={(e) =>
+                    handleInputChange(e.target.value, setCountry)
+                  }
                 />
               </HorizontalContainer>
               <input
                 type="text"
                 placeholder="Postal Code"
                 value={postalCode}
-                onChange={(e) => handleInputChange(e.target.value, setPostalCode)}
+                onChange={(e) =>
+                  handleInputChange(e.target.value, setPostalCode)
+                }
               />
             </form>
           </FormContainerWrapper>
@@ -167,12 +207,15 @@ const PageContainer = styled.main`
   margin-inline: 50px;
   padding: 1em;
   min-width: 1000px;
-  height: 800px;
+  height: 600px;
   border-radius: 3px;
 `;
 
 const OrderFormContainer = styled.div`
   flex: 1;
+  display: flex;
+  justify-content: center;
+  padding-inline: 1em;
 `;
 
 const CartContainer = styled.div`
@@ -256,6 +299,5 @@ const LeftInput = styled.input`
 const RightInput = styled.input`
   margin-right: 0 !important;
 `;
-
 
 export default Cart;
