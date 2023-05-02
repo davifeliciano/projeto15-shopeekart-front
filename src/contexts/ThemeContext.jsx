@@ -20,6 +20,7 @@ export const ThemeProvider = ({ children }) => {
       borderInputs: "#ccc",
       addToCartBg: "#FFF5F1",
       addToCartHoverBg: "#ffeae2",
+      success: "lightgreen",
     },
     {
       backgroundUpHeader: "",
@@ -34,6 +35,7 @@ export const ThemeProvider = ({ children }) => {
       borderInputs: "",
       addToCartBg: "",
       addToCartHoverBg: "",
+      success: "",
     },
   ];
 

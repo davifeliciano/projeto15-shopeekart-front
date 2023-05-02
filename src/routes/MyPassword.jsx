@@ -12,26 +12,61 @@ const MyPassword = () => {
   const [newPwd, setNewPwd] = useState("");
   const [confirmNewPwd, setConfirmNewPwd] = useState("");
   const [errMsg, setErrMsg] = useState("");
+  const [clearErrMsg, setClearErrMsg] = useState(true);
   const errRef = useRef();
   const axiosPrivate = useAxiosPrivate();
 
-  const handleSubmit = async event => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-
-    if (pwd.length < 6) return setErrMsg("Password must have at least 6 characters")
-    if (newPwd.length < 6) return setErrMsg("Password must have at least 6 characters")
-    if (newPwd !== confirmNewPwd) return setErrMsg("New passwords dont match")
+    setClearErrMsg(false);
 
     try {
-        await axiosPrivate.post("/password/change", {pwd, newpwd: newPwd})
-    }
-    catch (err) {
-        
+      if (pwd.length < 6)
+        return setErrMsg("Password must have at least 6 characters");
+      if (newPwd.length < 6)
+        return setErrMsg("Password must have at least 6 characters");
+      if (newPwd !== confirmNewPwd)
+        return setErrMsg("New passwords dont match");
+      if (newPwd === pwd)
+        return setErrMsg("Old password cant match New password");
+
+      await axiosPrivate.post("/password/change", { pwd, newpwd: newPwd });
+      setErrMsg("Password changed successfully");
+    } catch (err) {
+      if (!err?.response) {
+        setErrMsg("No Server Response");
+      } else if (err.response?.status === 400) {
+        setErrMsg("Missing Old Password or New Password");
+      } else if (err.response?.status === 401) {
+        setErrMsg("Unauthorized");
+      } else if (err.response?.status === 404) {
+        setErrMsg("Problems with cookie, relogin please");
+      } else {
+        setErrMsg("Change password Failed");
+      }
+      errRef.current.focus();
+    } finally {
+      setPwd("");
+      setNewPwd("");
+      setConfirmNewPwd("");
     }
   };
 
+  const handleChangePwd = (e) => {
+    !clearErrMsg && setClearErrMsg(true);
+    setPwd(e.target.value);
+  };
+  const handleChangeNewPwd = (e) => {
+    !clearErrMsg && setClearErrMsg(true);
+    setNewPwd(e.target.value);
+  };
+  const handleChangeConfirmNewPwd = (e) => {
+    !clearErrMsg && setClearErrMsg(true);
+    setConfirmNewPwd(e.target.value);
+  };
+
   useEffect(() => {
-    setErrMsg("");
+    if (clearErrMsg) setErrMsg("");
   }, [pwd, newPwd, confirmNewPwd]);
   return (
     <Section>
@@ -41,7 +76,13 @@ const MyPassword = () => {
         <FormContainerWrapper flexGrow={1}>
           <ErrContainer>
             <ErrWrapper
-              status={errMsg ? "errmsg" : "offscreen"}
+              status={
+                errMsg
+                  ? errMsg === "Password changed successfully"
+                    ? "success"
+                    : "errmsg"
+                  : "offscreen"
+              }
               posTop={"15px"}
             >
               <span ref={errRef}>{errMsg}</span>
@@ -52,19 +93,19 @@ const MyPassword = () => {
               type="password"
               placeholder="Old Password"
               value={pwd}
-              onChange={(e) => setPwd(e.target.value)}
+              onChange={(e) => handleChangePwd(e)}
             />
             <input
               type="password"
               placeholder="New Password"
               value={newPwd}
-              onChange={(e) => setNewPwd(e.target.value)}
+              onChange={(e) => handleChangeNewPwd(e)}
             />
             <input
               type="password"
               placeholder="Confirm New Password"
               value={confirmNewPwd}
-              onChange={(e) => setConfirmNewPwd(e.target.value)}
+              onChange={(e) => handleChangeConfirmNewPwd(e)}
             />
             <button>Change Password</button>
           </form>
