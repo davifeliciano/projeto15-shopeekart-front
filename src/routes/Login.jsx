@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useContext } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import MainContainerWrapper from "../components/SignRoutesContainer";
 import FormContainerWrapper from "../components/FormContainer";
@@ -9,6 +9,7 @@ import useInput from "../hooks/useInput";
 import useToggle from "../hooks/useToggle";
 import styled from "styled-components";
 import useTheme from "../hooks/useTheme";
+import { CartContext } from "../contexts/CartContext";
 
 const Login = () => {
   const [email, resetEmail, emailAttribs] = useInput("email", "");
@@ -19,13 +20,15 @@ const Login = () => {
   const emailRef = useRef();
   const errRef = useRef();
   const { setAuth } = useAuth();
+  const { setCart } = useContext(CartContext);
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.pathname !== "/login" ? location.pathname : "/";
+
   useEffect(() => {
     if (!check) {
-        resetEmail();
-        localStorage.removeItem("email");
+      resetEmail();
+      localStorage.removeItem("email");
     }
     emailRef.current.focus();
   }, []);
@@ -59,7 +62,25 @@ const Login = () => {
 
       if (!check) resetEmail();
 
-      navigate(from, { replace: true });
+      if (location.state?.order) {
+        try {
+          const config = {
+            headers: { authorization: `Bearer ${response.data.accessToken}` },
+          };
+          const res = await axiosPrivate.post(
+            "/orders",
+            location.state.order,
+            config
+          );
+          const orderId = res.data._id;
+          setCart([]);
+          return navigate(`/order/${orderId}`, { replace: true });
+        } catch (err) {
+          console.error(err);
+        }
+      }
+
+      return navigate(from, { replace: true });
     } catch (err) {
       console.log(err);
       if (!err?.response) {

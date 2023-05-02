@@ -6,10 +6,13 @@ import CartItem from "../components/CartItem";
 import sumCart from "../utils/sumCart";
 import formatCurrency from "../utils/formatCurrency";
 import useTheme from "../hooks/useTheme";
-import { Link } from "react-router-dom";
+import useAuth from "../hooks/useAuth";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
+import { Link, useNavigate } from "react-router-dom";
 import FormContainerWrapper from "../components/FormContainer";
 
 const Cart = () => {
+  const navigate = useNavigate();
   const { cart, setCart } = useContext(CartContext);
   const { colors } = useTheme();
   const [firstName, setFirstName] = useState("");
@@ -24,24 +27,55 @@ const Cart = () => {
   const [errMsg, setErrMsg] = useState("");
   const [clearErrMsg, setClearErrMsg] = useState(true);
   const errRef = useRef();
+  const { auth } = useAuth();
+  const axiosPrivate = useAxiosPrivate();
 
   const handleInputChange = (e, setFunction) => {
-    !clearErrMsg && setClearErrMsg(true)
+    !clearErrMsg && setClearErrMsg(true);
     setFunction(e.target.value);
   };
 
-  const handleSubmit = event => {
-    event.preventDefault()
-    setClearErrMsg(false)
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setClearErrMsg(false);
 
-    try {}
-    catch (err) {}
-    finally {
+    const order = {
+      products: cart.map((item) => {
+        return { count: item.count, product: item.product._id };
+      }),
+      orderTotal: sumCart(cart),
+      shipmentInfo: {
+        firstName,
+        lastName,
+        cpf,
+        phone,
+        address,
+        city,
+        uf,
+        country,
+        postalCode,
+      },
+    };
+
+    console.log(auth);
+    if (!auth) {
+      return navigate("/login", { state: { order } });
     }
-  }
+
+    try {
+      const res = await axiosPrivate.post("/orders", order);
+      const orderId = res.data._id;
+      setCart([]);
+      return navigate(`/order/${orderId}`, { replace: true });
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   useEffect(() => {
     if (clearErrMsg) setErrMsg("");
   }, [firstName, lastName, cpf, phone, address, city, uf, country, postalCode]);
+
   return (
     <>
       <Header />
@@ -52,17 +86,17 @@ const Cart = () => {
             <form>
               <HorizontalContainer>
                 <LeftInput
-                type="text"
-                placeholder="First Name"
-                value={firstName}
-                onChange={(e) => handleInputChange(e, setFirstName)}
-              />
-              <RightInput
-                type="text"
-                placeholder="Last Name"
-                value={lastName}
-                onChange={(e) => handleInputChange(e, setLastName)}
-              />
+                  type="text"
+                  placeholder="First Name"
+                  value={firstName}
+                  onChange={(e) => handleInputChange(e, setFirstName)}
+                />
+                <RightInput
+                  type="text"
+                  placeholder="Last Name"
+                  value={lastName}
+                  onChange={(e) => handleInputChange(e, setLastName)}
+                />
               </HorizontalContainer>
               <input
                 type="text"
@@ -83,24 +117,24 @@ const Cart = () => {
                 onChange={(e) => handleInputChange(e, setAddress)}
               />
               <HorizontalContainer>
-              <LeftInput
-                type="text"
-                placeholder="City"
-                value={city}
-                onChange={(e) => handleInputChange(e, setCity)}
-              />
-              <input
-                type="text"
-                placeholder="UF"
-                value={uf}
-                onChange={(e) => handleInputChange(e, setUf)}
-              />
-              <RightInput
-                type="text"
-                placeholder="Country"
-                value={country}
-                onChange={(e) => handleInputChange(e, setCountry)}
-              />
+                <LeftInput
+                  type="text"
+                  placeholder="City"
+                  value={city}
+                  onChange={(e) => handleInputChange(e, setCity)}
+                />
+                <input
+                  type="text"
+                  placeholder="UF"
+                  value={uf}
+                  onChange={(e) => handleInputChange(e, setUf)}
+                />
+                <RightInput
+                  type="text"
+                  placeholder="Country"
+                  value={country}
+                  onChange={(e) => handleInputChange(e, setCountry)}
+                />
               </HorizontalContainer>
               <input
                 type="text"
@@ -130,7 +164,11 @@ const Cart = () => {
               <Button className="continue-shopping" colors={colors}>
                 <Link to={-1}>Continue Shopping</Link>
               </Button>
-              <Button className="place-order" colors={colors} onClick={handleSubmit}>
+              <Button
+                className="place-order"
+                colors={colors}
+                onClick={handleSubmit}
+              >
                 Place Order
               </Button>
             </ButtonsContainer>
@@ -153,6 +191,10 @@ const PageContainer = styled.main`
 
 const OrderFormContainer = styled.div`
   flex: 1;
+  display: flex;
+  justify-content: center;
+  padding-inline: 1em;
+  padding-top: 80px;
 `;
 
 const CartContainer = styled.div`
@@ -228,12 +270,12 @@ const Button = styled.button`
 
 const HorizontalContainer = styled.div`
   display: flex;
-`
+`;
 const LeftInput = styled.input`
   margin-left: 0 !important;
-`
+`;
 
 const RightInput = styled.input`
   margin-right: 0 !important;
-`
+`;
 export default Cart;
