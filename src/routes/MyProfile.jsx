@@ -21,11 +21,12 @@ const MyProfile = () => {
     setFunction(value);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const body = { name, email, avatar };
     console.log(body);
-    axiosPrivate.put("user/edit", body);
+    await axiosPrivate.put("user/edit", body);
+    window.location.reload();
   };
 
   useEffect(() => {
@@ -84,6 +85,8 @@ const OrderFormContainer = styled.div`
 
   img {
     margin: 20px;
+    width: 120px;
+    height: 120px;
   }
 `;
 
