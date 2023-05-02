@@ -8,6 +8,7 @@ import formatCurrency from "../utils/formatCurrency";
 import useTheme from "../hooks/useTheme";
 import { Link } from "react-router-dom";
 import FormContainerWrapper from "../components/FormContainer";
+import ErrWrapper from "../components/Err";
 
 const Cart = () => {
   const { cart, setCart } = useContext(CartContext);
@@ -25,23 +26,34 @@ const Cart = () => {
   const [clearErrMsg, setClearErrMsg] = useState(true);
   const errRef = useRef();
 
-  const handleInputChange = (e, setFunction) => {
-    !clearErrMsg && setClearErrMsg(true)
-    setFunction(e.target.value);
+  const handleInputChange = (value, setFunction) => {
+    !clearErrMsg && setClearErrMsg(true);
+    setFunction(value);
   };
 
-  const handleSubmit = event => {
-    event.preventDefault()
-    setClearErrMsg(false)
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    setClearErrMsg(false);
 
-    try {}
-    catch (err) {}
-    finally {
+    if (!firstName) return setErrMsg("Missing First Name");
+    if (!lastName) return setErrMsg("Missing Last Name");
+    if (!cpf) return setErrMsg("Missing CPF");
+    if (!phone) return setErrMsg("Missing Phone");
+    if (!address) return setErrMsg("Missing Full Address");
+    if (!city) return setErrMsg("Missing City");
+    if (!uf) return setErrMsg("Missing UF");
+    if (!country) return setErrMsg("Missing Country");
+    if (!postalCode) return setErrMsg("Missing Postal Code");
+
+    try {
+    } catch (err) {
+    } finally {
     }
-  }
+  };
   useEffect(() => {
     if (clearErrMsg) setErrMsg("");
   }, [firstName, lastName, cpf, phone, address, city, uf, country, postalCode]);
+
   return (
     <>
       <Header />
@@ -49,64 +61,68 @@ const Cart = () => {
         <OrderFormContainer>
           <FormContainerWrapper height="">
             <h1>Shipment Info</h1>
+            <ErrWrapper status={errMsg ? "errmsg" : "offscreen"}>
+              <span ref={errRef}>{errMsg}</span>
+            </ErrWrapper>
             <form>
               <HorizontalContainer>
                 <LeftInput
-                type="text"
-                placeholder="First Name"
-                value={firstName}
-                onChange={(e) => handleInputChange(e, setFirstName)}
-              />
-              <RightInput
-                type="text"
-                placeholder="Last Name"
-                value={lastName}
-                onChange={(e) => handleInputChange(e, setLastName)}
-              />
+                  type="text"
+                  placeholder="First Name"
+                  value={firstName}
+                  onChange={(e) => handleInputChange(e.target.value, setFirstName)}
+                />
+                <RightInput
+                  type="text"
+                  placeholder="Last Name"
+                  value={lastName}
+                  onChange={(e) => handleInputChange(e.target.value, setLastName)}
+                />
               </HorizontalContainer>
               <input
                 type="text"
                 placeholder="CPF"
                 value={cpf}
-                onChange={(e) => handleInputChange(e, setCpf)}
+                onChange={(e) => handleInputChange(e.target.value, setCpf)}
               />
+
               <input
                 type="text"
                 placeholder="Phone"
                 value={phone}
-                onChange={(e) => handleInputChange(e, setPhone)}
+                onChange={(e) => handleInputChange(e.target.value, setPhone)}
               />
               <input
                 type="text"
                 placeholder="Full Address"
                 value={address}
-                onChange={(e) => handleInputChange(e, setAddress)}
+                onChange={(e) => handleInputChange(e.target.value, setAddress)}
               />
               <HorizontalContainer>
-              <LeftInput
-                type="text"
-                placeholder="City"
-                value={city}
-                onChange={(e) => handleInputChange(e, setCity)}
-              />
-              <input
-                type="text"
-                placeholder="UF"
-                value={uf}
-                onChange={(e) => handleInputChange(e, setUf)}
-              />
-              <RightInput
-                type="text"
-                placeholder="Country"
-                value={country}
-                onChange={(e) => handleInputChange(e, setCountry)}
-              />
+                <LeftInput
+                  type="text"
+                  placeholder="City"
+                  value={city}
+                  onChange={(e) => handleInputChange(e.target.value, setCity)}
+                />
+                <input
+                  type="text"
+                  placeholder="UF"
+                  value={uf}
+                  onChange={(e) => handleInputChange(e.target.value, setUf)}
+                />
+                <RightInput
+                  type="text"
+                  placeholder="Country"
+                  value={country}
+                  onChange={(e) => handleInputChange(e.target.value, setCountry)}
+                />
               </HorizontalContainer>
               <input
                 type="text"
                 placeholder="Postal Code"
                 value={postalCode}
-                onChange={(e) => handleInputChange(e, setPostalCode)}
+                onChange={(e) => handleInputChange(e.target.value, setPostalCode)}
               />
             </form>
           </FormContainerWrapper>
@@ -130,7 +146,11 @@ const Cart = () => {
               <Button className="continue-shopping" colors={colors}>
                 <Link to={-1}>Continue Shopping</Link>
               </Button>
-              <Button className="place-order" colors={colors} onClick={handleSubmit}>
+              <Button
+                className="place-order"
+                colors={colors}
+                onClick={handleSubmit}
+              >
                 Place Order
               </Button>
             </ButtonsContainer>
@@ -228,12 +248,14 @@ const Button = styled.button`
 
 const HorizontalContainer = styled.div`
   display: flex;
-`
+`;
 const LeftInput = styled.input`
   margin-left: 0 !important;
-`
+`;
 
 const RightInput = styled.input`
   margin-right: 0 !important;
-`
+`;
+
+
 export default Cart;
