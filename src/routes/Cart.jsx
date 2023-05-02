@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import Header from "../components/Header";
 import { CartContext } from "../contexts/CartContext";
 import styled from "styled-components";
@@ -7,16 +7,95 @@ import sumCart from "../utils/sumCart";
 import formatCurrency from "../utils/formatCurrency";
 import useTheme from "../hooks/useTheme";
 import { Link } from "react-router-dom";
+import FormContainerWrapper from "../components/FormContainer";
 
 const Cart = () => {
   const { cart, setCart } = useContext(CartContext);
   const { colors } = useTheme();
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [cpf, setCpf] = useState("");
+  const [phone, setPhone] = useState("");
+  const [address, setAddress] = useState("");
+  const [city, setCity] = useState("");
+  const [uf, setUf] = useState("");
+  const [country, setCountry] = useState("");
+  const [postalCode, setPostalCode] = useState("");
+
+  const handleInputChange = (e, setFunction) => {
+    setFunction(e.target.value);
+  };
 
   return (
     <>
       <Header />
       <PageContainer>
-        <OrderFormContainer></OrderFormContainer>
+        <OrderFormContainer>
+          <FormContainerWrapper height="">
+            <h1>Shipment Info</h1>
+            <form>
+              <HorizontalContainer>
+                <LeftInput
+                type="text"
+                placeholder="First Name"
+                value={firstName}
+                onChange={(e) => handleInputChange(e, setFirstName)}
+              />
+              <RightInput
+                type="text"
+                placeholder="Last Name"
+                value={lastName}
+                onChange={(e) => handleInputChange(e, setLastName)}
+              />
+              </HorizontalContainer>
+              <input
+                type="text"
+                placeholder="CPF"
+                value={cpf}
+                onChange={(e) => handleInputChange(e, setCpf)}
+              />
+              <input
+                type="text"
+                placeholder="Phone"
+                value={phone}
+                onChange={(e) => handleInputChange(e, setPhone)}
+              />
+              <input
+                type="text"
+                placeholder="Full Address"
+                value={address}
+                onChange={(e) => handleInputChange(e, setAddress)}
+              />
+              <HorizontalContainer>
+              <LeftInput
+                type="text"
+                placeholder="City"
+                value={city}
+                onChange={(e) => handleInputChange(e, setCity)}
+              />
+              <input
+                type="text"
+                placeholder="UF"
+                value={uf}
+                onChange={(e) => handleInputChange(e, setUf)}
+              />
+              <RightInput
+                type="text"
+                placeholder="Country"
+                value={country}
+                onChange={(e) => handleInputChange(e, setCountry)}
+              />
+              </HorizontalContainer>
+              <input
+                type="text"
+                placeholder="Postal Code"
+                value={postalCode}
+                onChange={(e) => handleInputChange(e, setPostalCode)}
+              />
+              <button>Order</button>
+            </form>
+          </FormContainerWrapper>
+        </OrderFormContainer>
         <CartContainer>
           <CartItemsContainer>
             {cart.map((item) => (
@@ -132,4 +211,14 @@ const Button = styled.button`
   }
 `;
 
+const HorizontalContainer = styled.div`
+  display: flex;
+`
+const LeftInput = styled.input`
+  margin-left: 0 !important;
+`
+
+const RightInput = styled.input`
+  margin-right: 0 !important;
+`
 export default Cart;
