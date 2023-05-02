@@ -208,7 +208,7 @@ const PageContainer = styled.main`
   margin-inline: 50px;
   padding: 1em;
   min-width: 1000px;
-  height: 800px;
+  height: 600px;
   border-radius: 3px;
 `;
 
@@ -217,7 +217,6 @@ const OrderFormContainer = styled.div`
   display: flex;
   justify-content: center;
   padding-inline: 1em;
-  padding-top: 80px;
 `;
 
 const CartContainer = styled.div`

@@ -71,6 +71,7 @@ const Container = styled.div`
   display: flex;
   gap: 1em;
   height: 64px;
+  width: 500px;
   padding: 1em;
   background-color: white;
   border: 1px solid transparent;
