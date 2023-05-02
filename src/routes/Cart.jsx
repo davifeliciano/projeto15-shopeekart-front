@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect, useRef } from "react";
 import Header from "../components/Header";
 import { CartContext } from "../contexts/CartContext";
 import styled from "styled-components";
@@ -21,11 +21,27 @@ const Cart = () => {
   const [uf, setUf] = useState("");
   const [country, setCountry] = useState("");
   const [postalCode, setPostalCode] = useState("");
+  const [errMsg, setErrMsg] = useState("");
+  const [clearErrMsg, setClearErrMsg] = useState(true);
+  const errRef = useRef();
 
   const handleInputChange = (e, setFunction) => {
+    !clearErrMsg && setClearErrMsg(true)
     setFunction(e.target.value);
   };
 
+  const handleSubmit = event => {
+    event.preventDefault()
+    setClearErrMsg(false)
+
+    try {}
+    catch (err) {}
+    finally {
+    }
+  }
+  useEffect(() => {
+    if (clearErrMsg) setErrMsg("");
+  }, [firstName, lastName, cpf, phone, address, city, uf, country, postalCode]);
   return (
     <>
       <Header />
@@ -92,7 +108,6 @@ const Cart = () => {
                 value={postalCode}
                 onChange={(e) => handleInputChange(e, setPostalCode)}
               />
-              <button>Order</button>
             </form>
           </FormContainerWrapper>
         </OrderFormContainer>
@@ -115,7 +130,7 @@ const Cart = () => {
               <Button className="continue-shopping" colors={colors}>
                 <Link to={-1}>Continue Shopping</Link>
               </Button>
-              <Button className="place-order" colors={colors}>
+              <Button className="place-order" colors={colors} onClick={handleSubmit}>
                 Place Order
               </Button>
             </ButtonsContainer>
