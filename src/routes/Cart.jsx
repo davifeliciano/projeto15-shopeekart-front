@@ -32,16 +32,16 @@ const Cart = () => {
   const axiosPrivate = useAxiosPrivate();
 
   const setInputInitialValues = (shipmentInfo) => {
-    shipmentInfo?.firstName && setFirstName(shipmentInfo.firstName)
-    shipmentInfo?.lastName && setLastName(shipmentInfo.lastName)
-    shipmentInfo?.cpf && setCpf(shipmentInfo.cpf)
-    shipmentInfo?.phone && setPhone(shipmentInfo.phone)
-    shipmentInfo?.address && setAddress(shipmentInfo.address)
-    shipmentInfo?.city && setCity(shipmentInfo.city)
-    shipmentInfo?.uf && setUf(shipmentInfo.uf)
-    shipmentInfo?.country && setCountry(shipmentInfo.country)
-    shipmentInfo?.postalCode && setPostalCode(shipmentInfo.postalCode)
-  }
+    shipmentInfo?.firstName && setFirstName(shipmentInfo.firstName);
+    shipmentInfo?.lastName && setLastName(shipmentInfo.lastName);
+    shipmentInfo?.cpf && setCpf(shipmentInfo.cpf);
+    shipmentInfo?.phone && setPhone(shipmentInfo.phone);
+    shipmentInfo?.address && setAddress(shipmentInfo.address);
+    shipmentInfo?.city && setCity(shipmentInfo.city);
+    shipmentInfo?.uf && setUf(shipmentInfo.uf);
+    shipmentInfo?.country && setCountry(shipmentInfo.country);
+    shipmentInfo?.postalCode && setPostalCode(shipmentInfo.postalCode);
+  };
 
   useEffect(() => {
     const getLastOrder = async () => {
@@ -77,6 +77,9 @@ const Cart = () => {
     if (!uf) return setErrMsg("Missing UF");
     if (!country) return setErrMsg("Missing Country");
     if (!postalCode) return setErrMsg("Missing Postal Code");
+
+    if (cart.length === 0)
+      return setErrMsg("Empty cart! Select one or more products to proceed");
 
     const order = {
       products: cart.map((item) => {
