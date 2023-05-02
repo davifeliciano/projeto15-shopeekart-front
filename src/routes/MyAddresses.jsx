@@ -26,26 +26,26 @@ const MyAdresses = () => {
     setFunction(value);
   };
 
-  const setInputInitialValues = () => {
-    lastOrderData?.firstName && setFirstName(lastOrderData.firstName)
-    lastOrderData?.lastName && setLastName(lastOrderData.lastName)
-    lastOrderData?.cpf && setCpf(lastOrderData.cpf)
-    lastOrderData?.phone && setPhone(lastOrderData.phone)
-    lastOrderData?.address && setAddress(lastOrderData.address)
-    lastOrderData?.city && setCity(lastOrderData.city)
-    lastOrderData?.uf && setUf(lastOrderData.uf)
-    lastOrderData?.country && setCountry(lastOrderData.country)
-    lastOrderData?.postalCode && setPostalCode(lastOrderData.postalCode)
+  const setInputInitialValues = (shipmentInfo) => {
+    shipmentInfo?.firstName && setFirstName(shipmentInfo.firstName)
+    shipmentInfo?.lastName && setLastName(shipmentInfo.lastName)
+    shipmentInfo?.cpf && setCpf(shipmentInfo.cpf)
+    shipmentInfo?.phone && setPhone(shipmentInfo.phone)
+    shipmentInfo?.address && setAddress(shipmentInfo.address)
+    shipmentInfo?.city && setCity(shipmentInfo.city)
+    shipmentInfo?.uf && setUf(shipmentInfo.uf)
+    shipmentInfo?.country && setCountry(shipmentInfo.country)
+    shipmentInfo?.postalCode && setPostalCode(shipmentInfo.postalCode)
   }
 
   useEffect(() => {
     const getLastOrder = async () => {
       try {
         const response = await axiosPrivate("/orders/last");
-        console.log(response);
+        console.log(response.data.shipmentInfo);
         if (response.status === 204) return null;
-        setLastOrderData(response.data);
-        setInputInitialValues();
+        setLastOrderData(response.data.shipmentInfo);
+        setInputInitialValues(response.data.shipmentInfo);
         return response;
       } catch (err) {
         console.log(err);
