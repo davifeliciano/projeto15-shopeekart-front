@@ -43,6 +43,7 @@ const MyPurchase = () => {
 };
 
 const MyPurchaseContainer = styled.div`
+
   h1 {
     font-size: 2rem;
     margin-bottom: 20px;
@@ -64,6 +65,8 @@ const MyPurchaseContainer = styled.div`
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
+    height: calc(100dvh - 362px);
+overflow: scroll;
   }
   h3 {
     font-size: 1.5rem;
