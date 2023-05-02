@@ -42,7 +42,6 @@ const MyAdresses = () => {
     const getLastOrder = async () => {
       try {
         const response = await axiosPrivate("/orders/last");
-        console.log(response.data.shipmentInfo);
         if (response.status === 204) return null;
         setLastOrderData(response.data.shipmentInfo);
         setInputInitialValues(response.data.shipmentInfo);
@@ -62,7 +61,7 @@ const MyAdresses = () => {
     <Section>
       <OrderFormContainer>
         <FormContainerWrapper>
-          <h1>Shipment Info</h1>
+          <h1>Last Shipment Info</h1>
           <ErrWrapper status={errMsg ? "errmsg" : "offscreen"}>
             <span ref={errRef}>{errMsg}</span>
           </ErrWrapper>
@@ -75,12 +74,14 @@ const MyAdresses = () => {
                 onChange={(e) =>
                   handleInputChange(e.currentTarget.value, setFirstName)
                 }
+                readOnly
               />
               <RightInput
                 type="text"
                 placeholder="Last Name"
                 value={lastName}
                 onChange={(e) => handleInputChange(e.target.value, setLastName)}
+                readOnly 
               />
             </HorizontalContainer>
             <input
@@ -88,6 +89,7 @@ const MyAdresses = () => {
               placeholder="CPF"
               value={cpf}
               onChange={(e) => handleInputChange(e.target.value, setCpf)}
+              readOnly 
             />
 
             <input
@@ -95,12 +97,14 @@ const MyAdresses = () => {
               placeholder="Phone"
               value={phone}
               onChange={(e) => handleInputChange(e.target.value, setPhone)}
+              readOnly 
             />
             <input
               type="text"
               placeholder="Full Address"
               value={address}
               onChange={(e) => handleInputChange(e.target.value, setAddress)}
+              readOnly 
             />
             <HorizontalContainer>
               <LeftInput
@@ -108,18 +112,21 @@ const MyAdresses = () => {
                 placeholder="City"
                 value={city}
                 onChange={(e) => handleInputChange(e.target.value, setCity)}
+                readOnly 
               />
               <input
                 type="text"
                 placeholder="UF"
                 value={uf}
                 onChange={(e) => handleInputChange(e.target.value, setUf)}
+                readOnly 
               />
               <RightInput
                 type="text"
                 placeholder="Country"
                 value={country}
                 onChange={(e) => handleInputChange(e.target.value, setCountry)}
+                readOnly 
               />
             </HorizontalContainer>
             <input
@@ -127,8 +134,8 @@ const MyAdresses = () => {
               placeholder="Postal Code"
               value={postalCode}
               onChange={(e) => handleInputChange(e.target.value, setPostalCode)}
+              readOnly 
             />
-            <button>Save</button>
           </form>
         </FormContainerWrapper>
       </OrderFormContainer>
