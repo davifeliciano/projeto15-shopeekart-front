@@ -47,7 +47,6 @@ const Cart = () => {
     const getLastOrder = async () => {
       try {
         const response = await axiosPrivate("/orders/last");
-        console.log(response.data.shipmentInfo);
         if (response.status === 204) return null;
         setInputInitialValues(response.data.shipmentInfo);
         return response;
@@ -218,6 +217,7 @@ const Cart = () => {
                 className="place-order"
                 colors={colors}
                 onClick={handleSubmit}
+                disabled={!cart?.length}
               >
                 Place Order
               </Button>
@@ -314,6 +314,12 @@ const Button = styled.button`
     background-color: ${(props) => props.colors.primary};
     border: 1px solid ${(props) => props.colors.primary};
     color: white;
+    &:disabled {
+    background-color: #ccc;
+    color: #999;
+    cursor: not-allowed;
+    text-decoration: line-through;
+  }
   }
 `;
 
