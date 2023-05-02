@@ -4,7 +4,7 @@ import useTheme from "../hooks/useTheme";
 const FormContainer = styled.div`
   width: ${props => props?.width ? props.width : "500px" };
   height: ${props => props?.flexGrow ? "auto" : props?.height ? props.height : "500px" };
-  background-color: white;
+  background-color: ${props => props.colors.background};
   border-radius: 20px;
   border: none;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);

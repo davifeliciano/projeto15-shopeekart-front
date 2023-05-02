@@ -73,7 +73,7 @@ const Container = styled.div`
   height: 64px;
   width: 500px;
   padding: 1em;
-  background-color: white;
+  background-color: ${props => props.colors.background};
   border: 1px solid transparent;
   border-radius: 3px;
   position: relative;

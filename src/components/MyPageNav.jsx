@@ -41,7 +41,7 @@ const MyPageNav = () => {
             My profile
           </div>
           <div onClick={() => navigate("/user/account/addresses")}>
-            Addresses
+            Shipment info
           </div>
           <div onClick={() => navigate("/user/account/password")}>
             Change password

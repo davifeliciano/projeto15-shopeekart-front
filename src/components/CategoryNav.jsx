@@ -17,7 +17,7 @@ const CategoryNav = () => {
   }, []);
 
   return (
-    <Container>
+    <Container colors={colors}>
       <h2>Categories</h2>
       <CategoryContainer>
         {categories.map((category) => (
@@ -45,7 +45,7 @@ const Container = styled.aside`
   height: 150svh;
   padding: 10px;
   overflow-y: hidden;
-  background-color: white;
+  background-color: ${props => props.colors.background};
   border-radius: 3px;
 `;
 
@@ -67,7 +67,7 @@ const CategoryLink = styled(Link)`
 
   &.active {
     background-color: ${(props) => props.colors.backgroundDownHeader};
-    color: white;
+    color: ${props => props.colors.background};
   }
 
   &.active:not(:hover) {
