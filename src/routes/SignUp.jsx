@@ -5,7 +5,7 @@ import MainContainerWrapper from "../components/SignRoutesContainer";
 import ErrWrapper from "../components/Err";
 import { axiosPrivate } from "../api/axios";
 import useTheme from "../hooks/useTheme";
-import { ThreeDots } from 'react-loader-spinner';
+import { ThreeDots } from "react-loader-spinner";
 import styled from "styled-components";
 
 const SignUp = () => {
@@ -52,6 +52,7 @@ const SignUp = () => {
     const body = { name, email, pwd: password };
 
     try {
+      setIsLoading(true);
       await axiosPrivate.post("/register", body);
 
       navigate("/login", { replace: true });
@@ -110,20 +111,23 @@ const SignUp = () => {
             disabled={isLoading}
           />
           <button disabled={isLoading}>
-          {isLoading ?
-            <Span><ThreeDots
-              height="80"
-              width="80"
-              radius="9"
-              color="#FFFFFF"
-              ariaLabel="three-dots-loading"
-              wrapperStyle={{}}
-              wrapperClassName=""
-              visible={true}
-            /></Span>
-            :
-            "Sign Up"}
-        </button>
+            {isLoading ? (
+              <Span>
+                <ThreeDots
+                  height="80"
+                  width="80"
+                  radius="9"
+                  color={colors.primary}
+                  ariaLabel="three-dots-loading"
+                  wrapperStyle={{}}
+                  wrapperClassName=""
+                  visible={true}
+                />
+              </Span>
+            ) : (
+              "Sign Up"
+            )}
+          </button>
         </form>
         <p>By signing up, you agree to Shopeekart's policies.</p>
         <p>
@@ -136,13 +140,13 @@ const SignUp = () => {
   );
 };
 const Span = styled.span`
-    width: 100%;
-    height: 24px;
-    top: 0;
-    left: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-`
+  width: 100%;
+  height: 24px;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 
 export default SignUp;

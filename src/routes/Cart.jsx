@@ -11,6 +11,7 @@ import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import { Link, useNavigate } from "react-router-dom";
 import FormContainerWrapper from "../components/FormContainer";
 import ErrWrapper from "../components/Err";
+import { ThreeDots } from "react-loader-spinner";
 
 const Cart = () => {
   const navigate = useNavigate();
@@ -27,6 +28,7 @@ const Cart = () => {
   const [postalCode, setPostalCode] = useState("");
   const [errMsg, setErrMsg] = useState("");
   const [clearErrMsg, setClearErrMsg] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const errRef = useRef();
   const { auth } = useAuth();
   const axiosPrivate = useAxiosPrivate();
@@ -103,12 +105,15 @@ const Cart = () => {
     }
 
     try {
+      setIsLoading(true);
       const res = await axiosPrivate.post("/orders", order);
       const orderId = res.data._id;
       setCart([]);
       return navigate(`/order/${orderId}`, { replace: true });
     } catch (err) {
       console.error(err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -135,6 +140,7 @@ const Cart = () => {
                   onChange={(e) =>
                     handleInputChange(e.currentTarget.value, setFirstName)
                   }
+                  disabled={isLoading}
                 />
                 <RightInput
                   type="text"
@@ -143,6 +149,7 @@ const Cart = () => {
                   onChange={(e) =>
                     handleInputChange(e.target.value, setLastName)
                   }
+                  disabled={isLoading}
                 />
               </HorizontalContainer>
               <input
@@ -150,6 +157,7 @@ const Cart = () => {
                 placeholder="CPF"
                 value={cpf}
                 onChange={(e) => handleInputChange(e.target.value, setCpf)}
+                disabled={isLoading}
               />
 
               <input
@@ -157,12 +165,14 @@ const Cart = () => {
                 placeholder="Phone"
                 value={phone}
                 onChange={(e) => handleInputChange(e.target.value, setPhone)}
+                disabled={isLoading}
               />
               <input
                 type="text"
                 placeholder="Full Address"
                 value={address}
                 onChange={(e) => handleInputChange(e.target.value, setAddress)}
+                disabled={isLoading}
               />
               <HorizontalContainer>
                 <LeftInput
@@ -170,12 +180,14 @@ const Cart = () => {
                   placeholder="City"
                   value={city}
                   onChange={(e) => handleInputChange(e.target.value, setCity)}
+                  disabled={isLoading}
                 />
                 <input
                   type="text"
                   placeholder="UF"
                   value={uf}
                   onChange={(e) => handleInputChange(e.target.value, setUf)}
+                  disabled={isLoading}
                 />
                 <RightInput
                   type="text"
@@ -184,6 +196,7 @@ const Cart = () => {
                   onChange={(e) =>
                     handleInputChange(e.target.value, setCountry)
                   }
+                  disabled={isLoading}
                 />
               </HorizontalContainer>
               <input
@@ -193,6 +206,7 @@ const Cart = () => {
                 onChange={(e) =>
                   handleInputChange(e.target.value, setPostalCode)
                 }
+                disabled={isLoading}
               />
             </form>
           </FormContainerWrapper>
@@ -216,13 +230,29 @@ const Cart = () => {
               <Button className="continue-shopping" colors={colors}>
                 <Link to={-1}>Continue Shopping</Link>
               </Button>
+
               <Button
                 className="place-order"
                 colors={colors}
                 onClick={handleSubmit}
-                disabled={!cart?.length}
+                disabled={!cart?.length || isLoading}
               >
-                Place Order
+                {isLoading ? (
+                  <Span>
+                    <ThreeDots
+                      height="80"
+                      width="80"
+                      radius="9"
+                      color={colors.primary}
+                      ariaLabel="three-dots-loading"
+                      wrapperStyle={{}}
+                      wrapperClassName=""
+                      visible={true}
+                    />
+                  </Span>
+                ) : (
+                  "Place Order"
+                )}
               </Button>
             </ButtonsContainer>
           </OrderSummary>
@@ -318,11 +348,11 @@ const Button = styled.button`
     border: 1px solid ${(props) => props.colors.primary};
     color: white;
     &:disabled {
-    background-color: #ccc;
-    color: #999;
-    cursor: not-allowed;
-    text-decoration: line-through;
-  }
+      background-color: #ccc;
+      color: #999;
+      cursor: not-allowed;
+      text-decoration: line-through;
+    }
   }
 `;
 
@@ -336,5 +366,13 @@ const LeftInput = styled.input`
 const RightInput = styled.input`
   margin-right: 0 !important;
 `;
-
+const Span = styled.span`
+  width: 100%;
+  height: 24px;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 export default Cart;
