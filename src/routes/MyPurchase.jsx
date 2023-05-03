@@ -1,49 +1,73 @@
-import React, { useEffect, useState } from 'react';
-import useAxiosPrivate from '../hooks/useAxiosPrivate';
-import styled from 'styled-components';
-import useTheme from '../hooks/useTheme';
+import React, { useEffect, useState } from "react";
+import useAxiosPrivate from "../hooks/useAxiosPrivate";
+import styled from "styled-components";
+import useTheme from "../hooks/useTheme";
+import { InfinitySpin } from "react-loader-spinner";
 
 const MyPurchase = () => {
-    const [isLoading, setIsLoading] = useState(true)
-    const [orders, setOrders] = useState([])
-    const axiosPrivate = useAxiosPrivate()
-    const { colors } = useTheme();
+  const [isLoading, setIsLoading] = useState(true);
+  const [orders, setOrders] = useState([]);
+  const axiosPrivate = useAxiosPrivate();
+  const { colors } = useTheme();
 
-    useEffect(() => {
-        const getAllOrders = async () => {
-            const response = await axiosPrivate.get("/orders")
-            console.log(response.data)
-            setOrders(response.data)
-            setIsLoading(false)
-        }
-        getAllOrders()
-    }, [])
+  useEffect(() => {
+    const getAllOrders = async () => {
+      const response = await axiosPrivate.get("/orders");
+      setOrders(response.data);
+      setIsLoading(false);
+    };
+    getAllOrders();
+  }, []);
 
-    return (
-        <MyPurchaseContainer colors={colors}>
-            <h1>My Purchase</h1>
-            {isLoading && <h2>Loading...</h2>}
-            {!isLoading && !orders?.length && <h2>You have no orders...</h2>}
-            {!isLoading && orders?.length && 
-                <div>
-                    {orders.map((order, i) => 
-                    <ul key={order._id}>
-                        <h3>Order {i+1}</h3>
-                        <li><b>Date</b>: {new Date(order.placedAt).toLocaleDateString('pt-BR')} </li>
-                        <li><b>Total</b>:{order.orderTotal.$numberDecimal}</li>
-                        <li><b>Sent to</b>: {`${order.shipmentInfo.firstName} ${order.shipmentInfo.lastName}`}</li>
-                        <li><b>Address</b>: {order.shipmentInfo.address}</li>
-                        <li><b>City</b>: {order.shipmentInfo.city} <b>UF</b>: {order.shipmentInfo.uf} <b>Country</b>: {order.shipmentInfo.country}</li>
-                        <li><b>Postal Code</b>: {order.shipmentInfo.postalCode.replace(/^(\d{5})(\d{3})$/, '$1-$2')}</li>
-                    </ul>)}
-                </div>
-            }
-        </MyPurchaseContainer>
-    );
+  return (
+    <MyPurchaseContainer colors={colors}>
+      <h1>My Purchase</h1>
+      {isLoading && (
+            <LoaderContainer>
+              <InfinitySpin width="200" color={colors.primary} />
+            </LoaderContainer>
+          )}
+      {!isLoading && !orders?.length && <h2>You have no orders...</h2>}
+      {!isLoading && orders?.length && (
+        <div>
+          {orders.map((order, i) => (
+            <ul key={order._id}>
+              <h3>Order {i + 1}</h3>
+              <li>
+                <b>Date</b>:{" "}
+                {new Date(order.placedAt).toLocaleDateString("pt-BR")}{" "}
+              </li>
+              <li>
+                <b>Total</b>:{order.orderTotal.$numberDecimal}
+              </li>
+              <li>
+                <b>Sent to</b>:{" "}
+                {`${order.shipmentInfo.firstName} ${order.shipmentInfo.lastName}`}
+              </li>
+              <li>
+                <b>Address</b>: {order.shipmentInfo.address}
+              </li>
+              <li>
+                <b>City</b>: {order.shipmentInfo.city} <b>UF</b>:{" "}
+                {order.shipmentInfo.uf} <b>Country</b>:{" "}
+                {order.shipmentInfo.country}
+              </li>
+              <li>
+                <b>Postal Code</b>:{" "}
+                {order.shipmentInfo.postalCode.replace(
+                  /^(\d{5})(\d{3})$/,
+                  "$1-$2"
+                )}
+              </li>
+            </ul>
+          ))}
+        </div>
+      )}
+    </MyPurchaseContainer>
+  );
 };
 
 const MyPurchaseContainer = styled.div`
-
   h1 {
     font-size: 2rem;
     margin-bottom: 20px;
@@ -60,13 +84,13 @@ const MyPurchaseContainer = styled.div`
     letter-spacing: 1px;
     color: ${(props) => props.colors.h1};
   }
-  div{
+  div {
     display: flex;
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
     height: calc(100dvh - 362px);
-overflow: scroll;
+    overflow: scroll;
   }
   h3 {
     font-size: 1.5rem;
@@ -91,9 +115,17 @@ overflow: scroll;
     text-align: center;
     margin-bottom: 5px;
   }
-  b{
+  b {
     font-weight: 700;
   }
-`
-
+`;
+const LoaderContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  height: 50px;
+  top: 10px;
+  left: calc(50% - 100px);
+`;
 export default MyPurchase;

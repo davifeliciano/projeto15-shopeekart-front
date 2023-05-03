@@ -4,8 +4,10 @@ import useTheme from "../hooks/useTheme";
 import FormContainerWrapper from "../components/FormContainer";
 import ErrWrapper from "../components/Err";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
+import { InfinitySpin } from "react-loader-spinner";
 
 const MyAdresses = () => {
+  const { colors } = useTheme();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [cpf, setCpf] = useState("");
@@ -18,6 +20,7 @@ const MyAdresses = () => {
   const [errMsg, setErrMsg] = useState("");
   const [clearErrMsg, setClearErrMsg] = useState(true);
   const [lastOrderData, setLastOrderData] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   const errRef = useRef();
   const axiosPrivate = useAxiosPrivate();
 
@@ -27,16 +30,16 @@ const MyAdresses = () => {
   };
 
   const setInputInitialValues = (shipmentInfo) => {
-    shipmentInfo?.firstName && setFirstName(shipmentInfo.firstName)
-    shipmentInfo?.lastName && setLastName(shipmentInfo.lastName)
-    shipmentInfo?.cpf && setCpf(shipmentInfo.cpf)
-    shipmentInfo?.phone && setPhone(shipmentInfo.phone)
-    shipmentInfo?.address && setAddress(shipmentInfo.address)
-    shipmentInfo?.city && setCity(shipmentInfo.city)
-    shipmentInfo?.uf && setUf(shipmentInfo.uf)
-    shipmentInfo?.country && setCountry(shipmentInfo.country)
-    shipmentInfo?.postalCode && setPostalCode(shipmentInfo.postalCode)
-  }
+    shipmentInfo?.firstName && setFirstName(shipmentInfo.firstName);
+    shipmentInfo?.lastName && setLastName(shipmentInfo.lastName);
+    shipmentInfo?.cpf && setCpf(shipmentInfo.cpf);
+    shipmentInfo?.phone && setPhone(shipmentInfo.phone);
+    shipmentInfo?.address && setAddress(shipmentInfo.address);
+    shipmentInfo?.city && setCity(shipmentInfo.city);
+    shipmentInfo?.uf && setUf(shipmentInfo.uf);
+    shipmentInfo?.country && setCountry(shipmentInfo.country);
+    shipmentInfo?.postalCode && setPostalCode(shipmentInfo.postalCode);
+  };
 
   useEffect(() => {
     const getLastOrder = async () => {
@@ -49,6 +52,8 @@ const MyAdresses = () => {
       } catch (err) {
         console.log(err);
         return null;
+      } finally {
+        setIsLoading(false);
       }
     };
     getLastOrder();
@@ -62,6 +67,11 @@ const MyAdresses = () => {
       <OrderFormContainer>
         <FormContainerWrapper>
           <h1>Last Shipment Info</h1>
+          {isLoading && (
+            <LoaderContainer>
+              <InfinitySpin width="200" color={colors.primary} />
+            </LoaderContainer>
+          )}
           <ErrWrapper status={errMsg ? "errmsg" : "offscreen"}>
             <span ref={errRef}>{errMsg}</span>
           </ErrWrapper>
@@ -75,13 +85,15 @@ const MyAdresses = () => {
                   handleInputChange(e.currentTarget.value, setFirstName)
                 }
                 readOnly
+                disabled={isLoading}
               />
               <RightInput
                 type="text"
                 placeholder="Last Name"
                 value={lastName}
                 onChange={(e) => handleInputChange(e.target.value, setLastName)}
-                readOnly 
+                readOnly
+                disabled={isLoading}
               />
             </HorizontalContainer>
             <input
@@ -89,7 +101,8 @@ const MyAdresses = () => {
               placeholder="CPF"
               value={cpf}
               onChange={(e) => handleInputChange(e.target.value, setCpf)}
-              readOnly 
+              readOnly
+              disabled={isLoading}
             />
 
             <input
@@ -97,14 +110,16 @@ const MyAdresses = () => {
               placeholder="Phone"
               value={phone}
               onChange={(e) => handleInputChange(e.target.value, setPhone)}
-              readOnly 
+              readOnly
+              disabled={isLoading}
             />
             <input
               type="text"
               placeholder="Full Address"
               value={address}
               onChange={(e) => handleInputChange(e.target.value, setAddress)}
-              readOnly 
+              readOnly
+              disabled={isLoading}
             />
             <HorizontalContainer>
               <LeftInput
@@ -112,21 +127,24 @@ const MyAdresses = () => {
                 placeholder="City"
                 value={city}
                 onChange={(e) => handleInputChange(e.target.value, setCity)}
-                readOnly 
+                readOnly
+                disabled={isLoading}
               />
               <input
                 type="text"
                 placeholder="UF"
                 value={uf}
                 onChange={(e) => handleInputChange(e.target.value, setUf)}
-                readOnly 
+                readOnly
+                disabled={isLoading}
               />
               <RightInput
                 type="text"
                 placeholder="Country"
                 value={country}
                 onChange={(e) => handleInputChange(e.target.value, setCountry)}
-                readOnly 
+                readOnly
+                disabled={isLoading}
               />
             </HorizontalContainer>
             <input
@@ -134,7 +152,8 @@ const MyAdresses = () => {
               placeholder="Postal Code"
               value={postalCode}
               onChange={(e) => handleInputChange(e.target.value, setPostalCode)}
-              readOnly 
+              readOnly
+              disabled={isLoading}
             />
           </form>
         </FormContainerWrapper>
@@ -166,5 +185,14 @@ const LeftInput = styled.input`
 
 const RightInput = styled.input`
   margin-right: 0 !important;
+`;
+const LoaderContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  height: 50px;
+  top: 50px;
+  left: calc(50% - 100px);
 `;
 export default MyAdresses;

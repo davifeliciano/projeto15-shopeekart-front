@@ -5,6 +5,7 @@ import FormContainerWrapper from "../components/FormContainer";
 import password from "../assets/password";
 import ErrWrapper from "../components/Err";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
+import { InfinitySpin } from "react-loader-spinner";
 
 const MyPassword = () => {
   const { colors } = useTheme();
@@ -13,6 +14,7 @@ const MyPassword = () => {
   const [confirmNewPwd, setConfirmNewPwd] = useState("");
   const [errMsg, setErrMsg] = useState("");
   const [clearErrMsg, setClearErrMsg] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const errRef = useRef();
   const axiosPrivate = useAxiosPrivate();
 
@@ -30,6 +32,7 @@ const MyPassword = () => {
       if (newPwd === pwd)
         return setErrMsg("Old password cant match New password");
 
+      setIsLoading(true);
       await axiosPrivate.post("/password/change", { pwd, newpwd: newPwd });
       setErrMsg("Password changed successfully");
     } catch (err) {
@@ -49,6 +52,7 @@ const MyPassword = () => {
       setPwd("");
       setNewPwd("");
       setConfirmNewPwd("");
+      setIsLoading(false);
     }
   };
 
@@ -71,9 +75,15 @@ const MyPassword = () => {
   return (
     <Section>
       <H1>Change Password</H1>
+
       <Line colors={colors} />
       <Container>
         <FormContainerWrapper flexGrow={1}>
+          {isLoading && (
+            <LoaderContainer>
+              <InfinitySpin width="200" color={colors.primary} />
+            </LoaderContainer>
+          )}
           <ErrContainer>
             <ErrWrapper
               status={
@@ -94,20 +104,23 @@ const MyPassword = () => {
               placeholder="Old Password"
               value={pwd}
               onChange={(e) => handleChangePwd(e)}
+              disabled={isLoading}
             />
             <input
               type="password"
               placeholder="New Password"
               value={newPwd}
               onChange={(e) => handleChangeNewPwd(e)}
+              disabled={isLoading}
             />
             <input
               type="password"
               placeholder="Confirm New Password"
               value={confirmNewPwd}
               onChange={(e) => handleChangeConfirmNewPwd(e)}
+              disabled={isLoading}
             />
-            <button>Change Password</button>
+            <button disabled={isLoading}>Change Password</button>
           </form>
           <LockerDiv>
             <img src={password} alt="password" />
@@ -154,5 +167,14 @@ const LockerDiv = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+`;
+const LoaderContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  height: 50px;
+  top: 10px;
+  left: calc(50% - 100px);
 `;
 export default MyPassword;
