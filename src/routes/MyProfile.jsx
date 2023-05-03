@@ -4,6 +4,8 @@ import FormContainerWrapper from "../components/FormContainer";
 import ErrWrapper from "../components/Err";
 import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import useAuth from "../hooks/useAuth";
+import { ThreeDots } from "react-loader-spinner";
+import useTheme from "../hooks/useTheme";
 
 const MyProfile = () => {
   const { auth } = useAuth();
@@ -12,6 +14,8 @@ const MyProfile = () => {
   const [avatar, setAvatar] = useState("");
   const [errMsg, setErrMsg] = useState("");
   const [clearErrMsg, setClearErrMsg] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const { colors } = useTheme();
 
   const errRef = useRef();
   const axiosPrivate = useAxiosPrivate();
@@ -24,9 +28,16 @@ const MyProfile = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const body = { name, email, avatar };
-    console.log(body);
+    setIsLoading(true)
+    try {
     await axiosPrivate.put("user/edit", body);
     window.location.reload();
+    }
+    catch (err) {
+      console.log(err)
+    } finally {
+      setIsLoading(false)
+    }
   };
 
   useEffect(() => {
@@ -46,6 +57,7 @@ const MyProfile = () => {
               placeholder="Name"
               value={name}
               onChange={(e) => handleInputChange(e.target.value, setName)}
+              disabled={isLoading}
             />
 
             <input
@@ -53,15 +65,34 @@ const MyProfile = () => {
               placeholder="Email"
               value={email}
               onChange={(e) => handleInputChange(e.target.value, setEmail)}
+              disabled={isLoading}
             />
             <input
               type="text"
               placeholder="New Avatar"
               value={avatar}
               onChange={(e) => handleInputChange(e.target.value, setAvatar)}
+              disabled={isLoading}
             />
             <img src={auth.avatar} alt="avatar" />
-            <button>Save</button>
+            <button disabled={isLoading}>
+            {isLoading ? (
+              <Span>
+                <ThreeDots
+                  height="80"
+                  width="80"
+                  radius="9"
+                  color={colors.primary}
+                  ariaLabel="three-dots-loading"
+                  wrapperStyle={{}}
+                  wrapperClassName=""
+                  visible={true}
+                />
+              </Span>
+            ) : (
+              "Save"
+            )}
+          </button>
           </form>
         </FormContainerWrapper>
       </OrderFormContainer>
@@ -89,5 +120,13 @@ const OrderFormContainer = styled.div`
     height: 120px;
   }
 `;
-
+const Span = styled.span`
+  width: 100%;
+  height: 24px;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 export default MyProfile;
