@@ -6,11 +6,13 @@ import ErrWrapper from "../components/Err";
 import { axiosPrivate } from "../api/axios";
 import styled from "styled-components";
 import useTheme from "../hooks/useTheme";
+import { ThreeDots } from "react-loader-spinner";
 
 const Reset = () => {
   const [email, setEmail] = useState("");
   const [errMsg, setErrMsg] = useState("");
   const [showSuccess, setShowSuccess] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const { colors } = useTheme();
   const emailRef = useRef();
   const errRef = useRef();
@@ -29,6 +31,7 @@ const Reset = () => {
       return setErrMsg("Invalid email");
     }
     try {
+      setIsLoading(true)
       await axiosPrivate.post("/password/reset", { email });
       setShowSuccess(true);
     } catch (err) {
@@ -43,6 +46,8 @@ const Reset = () => {
         setErrMsg("Login Failed");
       }
       errRef.current.focus();
+    } finally {
+      setIsLoading(false)
     }
   };
 
@@ -60,9 +65,27 @@ const Reset = () => {
             ref={emailRef}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            disabled={isLoading}
           />
 
-          <button>Reset Password</button>
+          <button disabled={isLoading}>
+            {isLoading ? (
+              <Span>
+                <ThreeDots
+                  height="80"
+                  width="80"
+                  radius="9"
+                  color={colors.primary}
+                  ariaLabel="three-dots-loading"
+                  wrapperStyle={{}}
+                  wrapperClassName=""
+                  visible={true}
+                />
+              </Span>
+            ) : (
+              "Reset Password"
+            )}
+          </button>
         </form>
         <br />
         <p>
@@ -153,5 +176,14 @@ const SuccessMsgContainer = styled.div`
       ${(props) => props.colors.backgroundDownHeader} 100%
     );
   }
+`;
+const Span = styled.span`
+  width: 100%;
+  height: 24px;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 export default Reset;
