@@ -10,6 +10,7 @@ import useToggle from "../hooks/useToggle";
 import styled from "styled-components";
 import useTheme from "../hooks/useTheme";
 import { CartContext } from "../contexts/CartContext";
+import { ThreeDots } from 'react-loader-spinner';
 
 const Login = () => {
   const [email, resetEmail, emailAttribs] = useInput("email", "");
@@ -132,7 +133,21 @@ const Login = () => {
             />
             <CheckboxLabel htmlFor="persist">Trust this device</CheckboxLabel>
           </CheckboxContainer>
-          <button disabled={isLoading}>Login</button>
+          <button disabled={isLoading}>
+          {isLoading ?
+            <Span><ThreeDots
+              height="80"
+              width="80"
+              radius="9"
+              color="#FFFFFF"
+              ariaLabel="three-dots-loading"
+              wrapperStyle={{}}
+              wrapperClassName=""
+              visible={true}
+            /></Span>
+            :
+            "Login"}
+        </button>
         </form>
         <p>
           <Link to="/reset">
@@ -192,4 +207,13 @@ const CheckboxLabel = styled.label`
   display: flex;
   align-items: center;
 `;
+const Span = styled.span`
+    width: 100%;
+    height: 24px;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`
 export default Login;

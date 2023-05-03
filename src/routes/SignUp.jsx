@@ -5,6 +5,8 @@ import MainContainerWrapper from "../components/SignRoutesContainer";
 import ErrWrapper from "../components/Err";
 import { axiosPrivate } from "../api/axios";
 import useTheme from "../hooks/useTheme";
+import { ThreeDots } from 'react-loader-spinner';
+import styled from "styled-components";
 
 const SignUp = () => {
   const [name, setName] = useState("");
@@ -12,6 +14,7 @@ const SignUp = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errMsg, setErrMsg] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const nameRef = useRef();
   const errRef = useRef();
   const navigate = useNavigate();
@@ -83,26 +86,44 @@ const SignUp = () => {
             ref={nameRef}
             value={name}
             onChange={(e) => setName(e.target.value)}
+            disabled={isLoading}
           />
           <input
             type="text"
             placeholder="E-mail"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            disabled={isLoading}
           />
           <input
             type="password"
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            disabled={isLoading}
           />
           <input
             type="password"
             placeholder="Confirm password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
+            disabled={isLoading}
           />
-          <button>Sign Up</button>
+          <button disabled={isLoading}>
+          {isLoading ?
+            <Span><ThreeDots
+              height="80"
+              width="80"
+              radius="9"
+              color="#FFFFFF"
+              ariaLabel="three-dots-loading"
+              wrapperStyle={{}}
+              wrapperClassName=""
+              visible={true}
+            /></Span>
+            :
+            "Sign Up"}
+        </button>
         </form>
         <p>By signing up, you agree to Shopeekart's policies.</p>
         <p>
@@ -114,5 +135,14 @@ const SignUp = () => {
     </MainContainerWrapper>
   );
 };
+const Span = styled.span`
+    width: 100%;
+    height: 24px;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`
 
 export default SignUp;

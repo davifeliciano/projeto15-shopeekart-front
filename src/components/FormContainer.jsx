@@ -2,16 +2,17 @@ import styled from "styled-components";
 import useTheme from "../hooks/useTheme";
 
 const FormContainer = styled.div`
-  width: ${props => props?.width ? props.width : "500px" };
-  height: ${props => props?.flexGrow ? "auto" : props?.height ? props.height : "500px" };
-  background-color: ${props => props.colors.background};
+  width: ${(props) => (props?.width ? props.width : "500px")};
+  height: ${(props) =>
+    props?.flexGrow ? "auto" : props?.height ? props.height : "500px"};
+  background-color: ${(props) => props.colors.background};
   border-radius: 20px;
   border: none;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;
   position: relative;
-  flex-grow: ${props => props?.flexGrow ? 1 : 0};
+  flex-grow: ${(props) => (props?.flexGrow ? 1 : 0)};
 
   h1 {
     font-size: 2rem;
@@ -70,6 +71,13 @@ const FormContainer = styled.div`
       font-size: 18px;
       color: white;
       cursor: pointer;
+      &:disabled {
+        background-color: #ccc !important;
+        background-image: none !important;
+        color: #999;
+        cursor: not-allowed;
+        text-decoration: line-through;
+      }
     }
 
     button:hover,
@@ -103,7 +111,17 @@ const FormContainer = styled.div`
 
 export const FormContainerWrapper = ({ children, height, width, flexGrow }) => {
   const { colors } = useTheme();
-  return <FormContainer colors={colors} height={height} width={width} flexGrow={flexGrow}> {children} </FormContainer>;
+  return (
+    <FormContainer
+      colors={colors}
+      height={height}
+      width={width}
+      flexGrow={flexGrow}
+    >
+      {" "}
+      {children}{" "}
+    </FormContainer>
+  );
 };
 
 export default FormContainerWrapper;
