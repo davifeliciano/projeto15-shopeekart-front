@@ -97,6 +97,8 @@ const Login = () => {
         setErrMsg("Login Failed");
       }
       errRef.current.focus();
+    } finally {
+      setIsLoading(false);
     }
   };
 

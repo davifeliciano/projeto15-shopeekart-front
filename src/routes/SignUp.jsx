@@ -70,6 +70,8 @@ const SignUp = () => {
         setErrMsg("Sign up Failed");
       }
       errRef.current.focus();
+    } finally {
+      setIsLoading(false);
     }
   };
 
