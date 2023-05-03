@@ -16,6 +16,7 @@ const Login = () => {
   const [check, toggleCheck] = useToggle("persist", false);
   const [password, setPassword] = useState("");
   const [errMsg, setErrMsg] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const { colors } = useTheme();
   const emailRef = useRef();
   const errRef = useRef();
@@ -53,6 +54,7 @@ const Login = () => {
     const body = { email, pwd: password };
 
     try {
+      setIsLoading(true);
       const response = await axiosPrivate.post("/login", body);
       setAuth({
         name: response.data.name,
@@ -80,7 +82,7 @@ const Login = () => {
           console.error(err);
         }
       }
-
+      setIsLoading(false)
       return navigate(from, { replace: true });
     } catch (err) {
       console.log(err);
@@ -110,12 +112,14 @@ const Login = () => {
             placeholder="E-mail"
             ref={emailRef}
             {...emailAttribs}
+            disabled={isLoading}
           />
           <input
             type="password"
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            disabled={isLoading}
           />
           <CheckboxContainer>
             <StyledCheckbox
@@ -124,10 +128,11 @@ const Login = () => {
               onChange={toggleCheck}
               checked={check}
               colors={colors}
+              disabled={isLoading}
             />
             <CheckboxLabel htmlFor="persist">Trust this device</CheckboxLabel>
           </CheckboxContainer>
-          <button>Login</button>
+          <button disabled={isLoading}>Login</button>
         </form>
         <p>
           <Link to="/reset">
