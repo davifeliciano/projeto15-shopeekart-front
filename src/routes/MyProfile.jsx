@@ -101,7 +101,7 @@ const MyProfile = () => {
               onChange={(e) => handleInputChange(e.target.value, setEmail)}
               disabled={isLoading}
             />
-            <Dropzone onDrop={handleDrop} avatar={avatar}>
+            <Dropzone onDrop={handleDrop} avatar={avatar} setErrMsg={setErrMsg}>
               {avatar ? (
                 <img src={URL.createObjectURL(avatar)} alt="avatar" />
               ) : auth.avatar ? (

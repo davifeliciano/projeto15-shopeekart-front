@@ -36,24 +36,36 @@ const StyledDropzone = styled.div`
   }
 `;
 
-const Dropzone = ({ onDrop, avatar }) => {
+const Dropzone = ({ onDrop, avatar, setErrMsg }) => {
   const { colors } = useTheme();
 
   const handleDrop = useCallback(
     (acceptedFiles) => {
-      onDrop(acceptedFiles);
+      const hasInvalidFileType = acceptedFiles.some(
+        (file) => !file.type.startsWith("image/")
+      );
+  
+      if (hasInvalidFileType) {
+        setErrMsg("File not allowed! Only images")
+        return;
+      }
+      const imageFiles = acceptedFiles.filter((file) =>
+        file.type.startsWith("image/")
+      );
+      console.log(imageFiles);
+      onDrop(imageFiles);
     },
     [onDrop]
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop: handleDrop,
-    accept: "image/*", // Only allow image files
+    maxFiles: 1,
   });
 
   return (
     <StyledDropzone {...getRootProps()} colors={colors}>
-      <input {...getInputProps({ accept: 'image/jpeg, image/png' })} />
+      <input {...getInputProps({ accept: 'image/jpeg, image/png' })} accept="image/*"/>
       {avatar ? (
         <img src={URL.createObjectURL(avatar)} alt="avatar" />
       ) : (
