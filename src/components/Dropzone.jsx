@@ -53,7 +53,7 @@ const Dropzone = ({ onDrop, avatar }) => {
 
   return (
     <StyledDropzone {...getRootProps()} colors={colors}>
-      <input {...getInputProps()} />
+      <input {...getInputProps({ accept: 'image/jpeg, image/png' })} />
       {avatar ? (
         <img src={URL.createObjectURL(avatar)} alt="avatar" />
       ) : (
