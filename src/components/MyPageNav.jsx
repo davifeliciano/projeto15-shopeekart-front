@@ -8,9 +8,11 @@ import { useNavigate } from "react-router-dom";
 import purchase from "../assets/purchase";
 
 const MyPageNav = () => {
+  const { auth } = useAuth();
   const [sex, setSex] = useState("male");
   const [shownName, setShownName] = useState("");
-  const { auth } = useAuth();
+  const [shownAvatar, setShownAvatar] = useState(auth.avatar);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -20,6 +22,7 @@ const MyPageNav = () => {
     } else {
       setShownName(words[0] + " " + words[words.length - 1]);
     }
+    setShownAvatar(auth.avatar);
   }, [auth]);
 
   const { colors } = useTheme();
@@ -35,7 +38,9 @@ const MyPageNav = () => {
         </div>
         <div>
           <div>
-            <strong onClick={() => navigate("/user/account/profile")}>My Account</strong>
+            <strong onClick={() => navigate("/user/account/profile")}>
+              My Account
+            </strong>
           </div>
           <div onClick={() => navigate("/user/account/profile")}>
             My profile

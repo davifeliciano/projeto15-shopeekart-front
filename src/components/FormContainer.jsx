@@ -55,7 +55,6 @@ const FormContainer = styled.div`
         transform: translateY(-50%);
       }
     }
-
     button {
       width: 100%;
       height: 36px;

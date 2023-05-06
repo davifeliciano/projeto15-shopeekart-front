@@ -6,9 +6,11 @@ import useAxiosPrivate from "../hooks/useAxiosPrivate";
 import useAuth from "../hooks/useAuth";
 import { ThreeDots } from "react-loader-spinner";
 import useTheme from "../hooks/useTheme";
+import Dropzone from "../components/Dropzone";
+import axios from "../api/axios";
 
 const MyProfile = () => {
-  const { auth } = useAuth();
+  const { auth, setAuth } = useAuth();
   const [name, setName] = useState(auth.name);
   const [email, setEmail] = useState(auth.email);
   const [avatar, setAvatar] = useState("");
@@ -20,6 +22,9 @@ const MyProfile = () => {
   const errRef = useRef();
   const axiosPrivate = useAxiosPrivate();
 
+  const handleDrop = (acceptedFiles) => {
+    setAvatar(acceptedFiles[0]);
+  };
   const handleInputChange = (value, setFunction) => {
     !clearErrMsg && setClearErrMsg(true);
     setFunction(value);
@@ -27,28 +32,58 @@ const MyProfile = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const body = { name, email, avatar };
-    setIsLoading(true)
-    try {
-    await axiosPrivate.put("user/edit", body);
-    window.location.reload();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!name || !email) {
+      setErrMsg("Name and e-mail required");
     }
-    catch (err) {
-      console.log(err)
+
+    if (!emailRegex.test(email)) {
+      setErrMsg("Invalid email");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("email", email);
+    formData.append("avatar", avatar);
+    setIsLoading(true);
+    try {
+      await axiosPrivate.put("user/edit", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      setErrMsg("Profile updated successfully");
+      const response = await axios.get("/refresh", {
+          withCredentials: true,
+        });
+        setAuth({ name: response.data.name, avatar: response.data.avatar, email: response.data.email, accessToken: response.data.accessToken });
+    } catch (err) {
+      console.log(err);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
   };
 
   useEffect(() => {
     if (clearErrMsg) setErrMsg("");
   }, [name, email, avatar]);
+
   return (
     <Section>
       <OrderFormContainer>
         <FormContainerWrapper>
           <h1>My Profile</h1>
-          <ErrWrapper status={errMsg ? "errmsg" : "offscreen"}>
+          <ErrWrapper
+            status={
+              errMsg
+                ? errMsg === "Profile updated successfully"
+                  ? "success"
+                  : "errmsg"
+                : "offscreen"
+            }
+          >
             <span ref={errRef}>{errMsg}</span>
           </ErrWrapper>
           <form onSubmit={handleSubmit}>
@@ -59,7 +94,6 @@ const MyProfile = () => {
               onChange={(e) => handleInputChange(e.target.value, setName)}
               disabled={isLoading}
             />
-
             <input
               type="text"
               placeholder="Email"
@@ -67,32 +101,33 @@ const MyProfile = () => {
               onChange={(e) => handleInputChange(e.target.value, setEmail)}
               disabled={isLoading}
             />
-            <input
-              type="text"
-              placeholder="New Avatar"
-              value={avatar}
-              onChange={(e) => handleInputChange(e.target.value, setAvatar)}
-              disabled={isLoading}
-            />
-            <img src={auth.avatar} alt="avatar" />
+            <Dropzone onDrop={handleDrop} avatar={avatar}>
+              {avatar ? (
+                <img src={URL.createObjectURL(avatar)} alt="avatar" />
+              ) : auth.avatar ? (
+                <img src={auth.avatar} alt="avatar" />
+              ) : (
+                <p>Drop your image here or click to select an image</p>
+              )}
+            </Dropzone>
             <button disabled={isLoading}>
-            {isLoading ? (
-              <Span>
-                <ThreeDots
-                  height="80"
-                  width="80"
-                  radius="9"
-                  color={colors.primary}
-                  ariaLabel="three-dots-loading"
-                  wrapperStyle={{}}
-                  wrapperClassName=""
-                  visible={true}
-                />
-              </Span>
-            ) : (
-              "Save"
-            )}
-          </button>
+              {isLoading ? (
+                <Span>
+                  <ThreeDots
+                    height="80"
+                    width="80"
+                    radius="9"
+                    color={colors.primary}
+                    ariaLabel="three-dots-loading"
+                    wrapperStyle={{}}
+                    wrapperClassName=""
+                    visible={true}
+                  />
+                </Span>
+              ) : (
+                "Save"
+              )}
+            </button>
           </form>
         </FormContainerWrapper>
       </OrderFormContainer>
