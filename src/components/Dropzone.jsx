@@ -1,7 +1,7 @@
-import React, { useCallback } from 'react';
-import { useDropzone } from 'react-dropzone';
-import styled from 'styled-components';
-import useTheme from '../hooks/useTheme';
+import React, { useCallback } from "react";
+import { useDropzone } from "react-dropzone";
+import styled from "styled-components";
+import useTheme from "../hooks/useTheme";
 
 const StyledDropzone = styled.div`
   display: flex;
@@ -9,7 +9,7 @@ const StyledDropzone = styled.div`
   align-items: center;
   justify-content: center;
   height: 160px;
-  border: 2px dashed ${props => props.colors.primary};
+  border: 2px dashed ${(props) => props.colors.primary};
   border-radius: 15px;
   padding: 20px;
   margin: 8px 0;
@@ -18,14 +18,14 @@ const StyledDropzone = styled.div`
   &:focus,
   &:hover {
     outline: none;
-    border-color: ${props => props.colors.secondary};
+    border-color: ${(props) => props.colors.secondary};
   }
 
   & p {
     margin: 0;
     font-size: 18px;
     font-weight: 600;
-    color: ${props => props.colors.primary};
+    color: ${(props) => props.colors.primary};
   }
 
   & img {
@@ -39,11 +39,17 @@ const StyledDropzone = styled.div`
 const Dropzone = ({ onDrop, avatar }) => {
   const { colors } = useTheme();
 
-  const handleDrop = useCallback(acceptedFiles => {
-    onDrop(acceptedFiles);
-  }, [onDrop]);
+  const handleDrop = useCallback(
+    (acceptedFiles) => {
+      onDrop(acceptedFiles);
+    },
+    [onDrop]
+  );
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop: handleDrop });
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop: handleDrop,
+    accept: "image/*", // Only allow image files
+  });
 
   return (
     <StyledDropzone {...getRootProps()} colors={colors}>
@@ -53,7 +59,9 @@ const Dropzone = ({ onDrop, avatar }) => {
       ) : (
         <>
           <p>Drop your image here or click to select an image</p>
-          <span>{isDragActive ? 'Release to drop' : 'Drag and drop an image here'}</span>
+          <span>
+            {isDragActive ? "Release to drop" : "Drag and drop an image here"}
+          </span>
         </>
       )}
     </StyledDropzone>
