@@ -52,7 +52,6 @@ const Dropzone = ({ onDrop, avatar, setErrMsg }) => {
       const imageFiles = acceptedFiles.filter((file) =>
         file.type.startsWith("image/")
       );
-      console.log(imageFiles);
       onDrop(imageFiles);
     },
     [onDrop]
